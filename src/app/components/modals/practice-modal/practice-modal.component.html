@@ -1,0 +1,29 @@
+<hlm-dialog [state]="state()!" (closed)="closeModal()">
+  <hlm-dialog-content *brnDialogContent="let ctx" class="max-w-md">
+    <hlm-dialog-header>
+      <div class="flex items-center w-full justify-center mb-5">
+        <img src="/images/heart.svg" alt="Heart" height="100" width="100" />
+      </div>
+      <h3 hlmDialogTitle class="text-center font-bold text-2xl">
+        Practice lesson
+      </h3>
+      <p hlmDialogDescription class="text-center text-base">
+        Use practice lesson to regain hearts and points. You cannot loose hearts or points in practice lessons.
+      </p>
+    </hlm-dialog-header>
+
+    <hlm-dialog-footer class="mb-4">
+      <div class="flex flex-col gap-y-4 w-full">
+        <button
+          hlmBtn
+          variant="primary"
+          size="lg"
+          class="w-full"
+          (click)="closeModal()"
+        >
+          I understand
+        </button>
+      </div>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>

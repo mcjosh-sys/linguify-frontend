@@ -1,0 +1,15 @@
+<hlm-dialog [state]="state()" (closed)="close()">
+  <hlm-dialog-content *brnDialogContent="let ctx" class="max-w-md">
+    <hlm-dialog-header>
+      <div class="flex flex-col justify-center mt-5 mb-2">
+      </div>
+      <h3 hlmDialogTitle class="text-primary font-bold text-2xl">
+        {{ title() }}
+      </h3>
+      <p hlmDialogDescription class="text-base">
+        {{ description() }}
+      </p>
+    </hlm-dialog-header>
+    <ng-container #modalContent></ng-container>
+  </hlm-dialog-content>
+</hlm-dialog>

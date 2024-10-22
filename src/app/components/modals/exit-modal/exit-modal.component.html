@@ -1,0 +1,38 @@
+<hlm-dialog [state]="state()!" (closed)="closeModal()">
+  <hlm-dialog-content *brnDialogContent="let ctx" class="max-w-md">
+    <hlm-dialog-header>
+      <div class="flex items-center w-full justify-center mb-5">
+        <img src="/images/mascot_sad.svg" alt="" height="80" width="80" />
+      </div>
+      <h3 hlmDialogTitle class="text-center font-bold text-2xl">
+        Wait don&apos; go!
+      </h3>
+      <p hlmDialogDescription class="text-center text-base">
+        You&apos;re about to leave the lesson. Are you sure?
+      </p>
+    </hlm-dialog-header>
+
+    <hlm-dialog-footer class="mb-4">
+      <div class="flex flex-col gap-y-4 w-full">
+        <button
+          hlmBtn
+          variant="primary"
+          size="lg"
+          class="w-full"
+          (click)="closeModal()"
+        >
+          Keep Learning
+        </button>
+        <button
+          hlmBtn
+          variant="dangerOutline"
+          size="lg"
+          class="w-full"
+          (click)="closeModal(); router.navigate(['/learn'])"
+        >
+          End Session
+        </button>
+      </div>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>

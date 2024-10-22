@@ -1,0 +1,43 @@
+<div [class]="_computedClass()">
+  <a routerLink="/learn">
+    <div class="pt-8 pl-4 pb-7 flex items-center gap-x-3">
+      <img
+        src="/images/mascot.svg"
+        loading="lazy"
+        height="40"
+        width="40"
+        alt="mascot"
+      />
+      <h1 class="text-2xl font-extrabold text-green-600 tracking-wide">
+        Liguify
+      </h1>
+    </div>
+  </a>
+  <div class="flex flex-col gap-y-2 flex-1 px-4">
+    <app-sidebar-item label="learn" link="/learn" iconSrc="/images/learn.svg" />
+    <app-sidebar-item
+      label="leaderboard"
+      link="/leaderboard"
+      iconSrc="/images/leaderboard.svg"
+    />
+    <app-sidebar-item
+      label="quests"
+      link="/quests"
+      iconSrc="/images/quests.svg"
+    />
+    <app-sidebar-item label="shop" link="/shop" iconSrc="/images/shop.svg" />
+  </div>
+
+  <div class="p-4">
+    <app-clerk-loading>
+      <hlm-icon
+        size="sm"
+        name="lucideLoader"
+        class="text-muted-foreground animate-spin"
+      />
+    </app-clerk-loading>
+    <app-clerk-loaded>
+      <app-user-button class="h-10 w-10" />
+    </app-clerk-loaded>
+  </div>
+</div>

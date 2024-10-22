@@ -1,0 +1,80 @@
+<a [routerLink]="href" [style]="{ pointerEvents: locked() ? 'none' : 'auto' }">
+  <div
+    class="relative"
+    [style]="{
+      right: position + 'px',
+      'margin-top': isFirst && !isCompleted ? '60px' : '24px'
+    }"
+  >
+    @if(current()){
+    <div class="h-[102px] w-[102px] relative">
+      <div
+        class="absolute -top-6 left-2.5 px-3 py-2.5 border-2 font-bold uppercase text-green-500 bg-white rounded-xl animate-bounce tracking-wide z-10"
+      >
+        Start
+        <div
+          class="absolute left-1/2 -bottom-2 w-0 h-0 border-x-8 border-x-transparent border-t-8 tansform -translate-x-1/2"
+        ></div>
+      </div>
+      <!-- <circle-progress
+        [percent]="percent!"
+        [radius]="40"
+        [outerStrokeWidth]="8"
+        [showTitle]="false"
+        [showSubtitle]="false"
+        [innerStrokeWidth]="8"
+        [outerStrokeColor]="'#4ade80'"
+        [innerStrokeColor]="'#e5e7eb'"
+        [animation]="true"
+        [animationDuration]="300"
+      >
+    </circle-progress> -->
+      <app-circular-progress [percent]="percentage()">
+        <button
+          hlmBtn
+          size="rounded"
+          [variant]="locked() ? 'locked' : 'secondary'"
+          class="h-[70px] w-[70px]"
+        >
+          <!-- <hlm-icon
+            [class]="
+              cn(
+                'h-10 w-10',
+                locked()
+                  ? 'fill-neutral-400 text-neutral-400  stroke-neutral-400'
+                  : 'fill-primary-foreground text-primary-foreground',
+                isCompleted && 'fill-none stroke-[4]'
+              )
+            "
+            [name]="icon"
+          /> -->
+          <i-lucide [name]="icon" [class]="
+              cn(
+                'h-10 w-10',
+                locked()
+                  ? 'fill-neutral-400 text-neutral-400  stroke-neutral-400'
+                  : 'fill-primary-foreground text-primary-foreground',
+                isCompleted && 'fill-none stroke-[4]'
+              )
+            "></i-lucide>
+        </button>
+      </app-circular-progress>
+    </div>
+    } @else { <button
+          hlmBtn
+          size="rounded"
+          [variant]="locked() ? 'locked' : 'secondary'"
+          class="h-[70px] w-[70px]"
+        >
+          <i-lucide [name]="icon" [class]="
+              cn(
+                'h-10 w-10',
+                locked()
+                  ? 'fill-neutral-400 text-neutral-400  stroke-neutral-400'
+                  : 'fill-primary-foreground text-primary-foreground',
+                isCompleted && 'fill-none stroke-[4]'
+              )
+            "></i-lucide>
+        </button>}
+  </div>
+</a>

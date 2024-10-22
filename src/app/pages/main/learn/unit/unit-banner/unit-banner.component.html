@@ -1,0 +1,38 @@
+<div
+  class="w-full rounded-xl bg-green-500 p-5 text-white flex items-center justify-between mt-4"
+>
+  <div class="space-y-2.5">
+    <h3 class="text-2xl font-bold">{{ title() }}</h3>
+    <p class="text-lg">{{ description() }}</p>
+  </div>
+  <a
+    routerLink="/lesson"
+    hlmBtn
+    size="lg"
+    variant="secondary"
+    class="hidden xl:flex border-2 border-b-4 active:border-b-2"
+  >
+    <svg 
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="lucide lucide-notebook-text mr-2"
+    >
+      <path d="M2 6h4" />
+      <path d="M2 10h4" />
+      <path d="M2 14h4" />
+      <path d="M2 18h4" />
+      <rect width="16" height="20" x="4" y="2" rx="2" />
+      <path d="M9.5 8h5" />
+      <path d="M9.5 12H16" />
+      <path d="M9.5 16H14" />
+    </svg>
+    Continue
+  </a>
+</div>

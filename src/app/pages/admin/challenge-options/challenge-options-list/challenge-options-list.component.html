@@ -1,0 +1,220 @@
+@if(_loading$ | async){
+<app-loader />
+}@else { @if(_challengeOptions().length){
+<app-admin-page-header
+  title="challenge options"
+  [listLength]="_challengeOptions().length"
+  description="Manage challenge option catalog"
+  showCreateButton
+  (click)="handleCreate()"
+/>
+<div class="flex flex-col justify-between gap-4 sm:flex-row">
+  <input
+    hlmInput
+    class="w-full md:w-80"
+    placeholder="Filter text..."
+    [ngModel]="_textFilter()"
+    (ngModelChange)="_rawFilterInput.set($event)"
+  />
+
+  <button hlmBtn variant="normalOutline" align="end" [brnMenuTriggerFor]="menu">
+    Columns
+    <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+  </button>
+  <ng-template #menu>
+    <hlm-menu class="w-32">
+      @for (column of _columnManager.allColumns; track column.name) {
+      <button
+        hlmMenuItemCheckbox
+        [disabled]="_columnManager.isColumnDisabled(column.name)"
+        [checked]="_columnManager.isColumnVisible(column.name)"
+        (triggered)="_columnManager.toggleVisibility(column.name)"
+      >
+        <hlm-menu-item-check />
+        <span>{{ column.label }}</span>
+      </button>
+      }
+    </hlm-menu>
+  </ng-template>
+</div>
+
+<brn-table
+  hlm
+  stickyHeader
+  class="border-border mt-4 block h-fit max-h-[400px] md:max-h-[500px] overflow-auto rounded-md border"
+  [dataSource]="_filteredSortedPaginatedChallengeOptions()"
+  [displayedColumns]="_allDisplayedColumns()"
+  [trackBy]="_trackBy"
+>
+  <brn-column-def name="text" class="w-28 max-w-40 sm:w-36 md:max-w-60">
+    <hlm-th *brnHeaderDef>
+      <button
+        hlmBtn
+        size="sm"
+        variant="normal"
+        class="capitalize p-0"
+        (click)="handleTextSortChange()"
+      >
+        Text
+        <hlm-icon class="ml-0.5" size="sm" name="lucideArrowUpDown" />
+      </button>
+    </hlm-th>
+    <hlm-td *brnCellDef="let element">
+      {{ element.text | titlecase }}
+    </hlm-td>
+  </brn-column-def>
+  <brn-column-def name="correct" class="w-28 sm:w-36">
+    <hlm-th *brnHeaderDef> Correct </hlm-th>
+    <hlm-td *brnCellDef="let element">
+      {{ element.correct ? "Yes" : "No" }}
+    </hlm-td>
+  </brn-column-def>
+  <brn-column-def name="challenge" class="w-28 sm:w-36">
+    <hlm-th *brnHeaderDef> Challenge </hlm-th>
+    <hlm-td *brnCellDef="let element">
+      <a
+        [routerLink]="['/admin', 'challenges', element.challenge.id]"
+        class="text-sky-500 hover:underline"
+      >
+        {{ element.challenge.question }}
+      </a>
+    </hlm-td>
+  </brn-column-def>
+  <brn-column-def name="audioSrc" class="w-40">
+    <hlm-th *brnHeaderDef> Audio Source </hlm-th>
+    <hlm-td truncate *brnCellDef="let element">
+      <span
+        (click)="playAudio(element.audioSrc)"
+        class="cursor-pointer text-sky-500 hover:underline"
+      >
+        {{ element.audioSrc }}
+      </span>
+    </hlm-td>
+  </brn-column-def>
+  <brn-column-def name="imageSrc" class="w-40">
+    <hlm-th *brnHeaderDef> Image Source </hlm-th>
+    <hlm-td truncate *brnCellDef="let element">
+      @if(element.imageSrc){
+      <a
+        [href]="element.imageSrc"
+        (click)="openLink(element.imageSrc)"
+        class="text-sky-500 hover:underline"
+      >
+        {{ element.imageSrc }}
+      </a>
+      }@else {-}
+    </hlm-td>
+  </brn-column-def>
+  <brn-column-def name="actions" class="w-16">
+    <hlm-th *brnHeaderDef></hlm-th>
+    <hlm-td *brnCellDef="let element">
+      <button
+        hlmBtn
+        variant="normal"
+        class="h-6 w-6 p-0.5"
+        align="end"
+        [brnMenuTriggerFor]="menu"
+      >
+        <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
+      </button>
+
+      <ng-template #menu>
+        <hlm-menu>
+          <hlm-menu-label>Actions</hlm-menu-label>
+          <hlm-menu-separator />
+          <hlm-menu-group>
+            <button hlmMenuItem (click)="onCopy(element.id)">
+              <hlm-icon hlmMenuIcon name="lucideCopy" />
+              Copy ID
+            </button>
+          </hlm-menu-group>
+          <hlm-menu-group>
+            <button hlmMenuItem (click)="handleUpdate(element.id)">
+              <hlm-icon hlmMenuIcon name="lucideEdit" />
+              Update
+            </button>
+          </hlm-menu-group>
+          <hlm-menu-separator />
+          <hlm-menu-group>
+            <button
+              hlmMenuItem
+              class="bg-rose-500 hover:bg-rose-500/90 text-white"
+              (click)="confirmDelete(element.id)"
+            >
+              <hlm-icon hlmMenuIcon name="lucideTrash2" />
+              Delete
+            </button>
+          </hlm-menu-group>
+        </hlm-menu>
+      </ng-template>
+    </hlm-td>
+  </brn-column-def>
+  <div
+    class="flex items-center justify-center p-20 text-muted-foreground"
+    brnNoDataRow
+  >
+    No data
+  </div>
+</brn-table>
+<div
+  class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
+  *brnPaginator="
+    let ctx;
+    totalElements: _totalElements();
+    pageSize: _pageSize();
+    onStateChange: _onStateChange
+  "
+>
+  <span class="text-sm text-muted-foreground"
+    >Showing {{ _displayedIndices().start }} -
+    {{ _displayedIndices().end + 1 }} of {{ _totalElements() }} row(s).</span
+  >
+  <div class="flex mt-2 sm:mt-0">
+    <brn-select
+      class="inline-block"
+      placeholder="{{ _availablePageSizes[0] }}"
+      [(ngModel)]="_pageSize"
+    >
+      <hlm-select-trigger class="inline-flex mr-1 w-15 h-9">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        @for (size of _availablePageSizes; track size) {
+        <hlm-option [value]="size">
+          {{ size === 10000 ? "All" : size }}
+        </hlm-option>
+        }
+      </hlm-select-content>
+    </brn-select>
+
+    <div class="flex space-x-1">
+      <button
+        size="sm"
+        variant="normalOutline"
+        hlmBtn
+        [disabled]="!ctx.decrementable()"
+        (click)="ctx.decrement()"
+      >
+        Previous
+      </button>
+      <button
+        size="sm"
+        variant="normalOutline"
+        hlmBtn
+        [disabled]="!ctx.incrementable()"
+        (click)="ctx.increment()"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+}@else{
+<app-admin-empty-list title="challenge option" class="mt-8" />
+}
+<app-admin-create-button
+  variant="rounded"
+  class="fixed bottom-6 right-4 md:hidden"
+  (onClick)="handleCreate()"
+/>
+}

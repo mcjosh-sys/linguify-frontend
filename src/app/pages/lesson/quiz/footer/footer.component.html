@@ -1,0 +1,46 @@
+<footer
+  [class]="
+    hlm(
+      'lg:h-[140px] h-[100px] border-t-2',
+      status() === 'correct' && 'border-transparent bg-green-100',
+      status() === 'wrong' && 'border-transparent bg-rose-100'
+    )
+  "
+>
+  <div
+    class="max-w-[1140px] h-full mx-auto flex items-center justify-between px-6 lg:px-10"
+  >
+    @if (status() === 'correct') {
+    <div
+      class="text-green-500 font-bold text-base lg:text-2xl flex items-center"
+    >
+      <hlm-icon name="lucideCheckCircle" class="h-6 w-6 lg:h-10 lg:w-10 mr-4" />
+      Nicely done!
+    </div>
+    }@else if (status() === 'wrong') {
+    <div
+      class="text-rose-500 font-bold text-base lg:text-2xl flex items-center"
+    >
+      <hlm-icon name="lucideXCircle" class="h-6 w-6 lg:h-10 lg:w-10 mr-4" />
+      Try again.
+    </div>
+    }@else if (status() === 'completed') {
+    <button hlmBtn [size]="isMobile ? 'sm' : 'lg'" (click)="onPracticeAgain()">
+      Practice again
+    </button>
+    }
+
+    <button
+      hlmBtn
+      [disabled]="disabled()"
+      class="ml-auto"
+      (click)="handleCheck()"
+      [size]="isMobile ? 'sm' : 'lg'"
+      [variant]="status() === 'wrong' ? 'danger' : 'secondary'"
+    >
+      @if(status() === 'none'){Check} @else if (status() ==='wrong') {Retry}
+      @else if (status() ==='correct') {Next} @else if (status() ==='completed')
+      {Continue}
+    </button>
+  </div>
+</footer>

@@ -1,0 +1,76 @@
+@if(totalItems > pageSize){
+<nav aria-label="Page navigation" [class]="className">
+  <ul class="flex justify-center space-x-2">
+    <!-- First Page Button -->
+    <li class="page-item" [class.disabled]="currentPage === 1" title="First page" (click)="selectPage(1)">
+    @if(firstLabel){
+        {{firstLabel}}
+      }@else {
+          <hlm-icon name="lucideChevronsLeft" />
+      }
+    </li>
+
+    <!-- Previous Page Button -->
+    <li class="page-item" [class.disabled]="currentPage === 1" title="Previous page" (click)="selectPage(currentPage - 1)">
+        @if(previousLabel){
+        {{previousLabel}}
+      }@else {
+          <hlm-icon name="lucideChevronLeft" />
+      }
+    </li>
+
+    <!-- Page Numbers -->
+    @for(page of visiblePages; track page){
+    <li
+      class="page-item bg-muted p-3 leading-[0] rounded-lg hover:bg-sky-300"
+      [class.active]="currentPage === page"
+      [class.bg-sky-500]="currentPage === page"
+      [title]="'Page ' + page"
+      (click)="selectPage(page)"
+    >
+     {{ page }}
+    </li>
+    }
+
+    <!-- Next Page Button -->
+    <li class="page-item" [class.disabled]="currentPage === totalPages" (click)="selectPage(currentPage + 1)">
+    @if(nextLabel){
+    {{ nextLabel }}
+    }@else {
+    <hlm-icon name="lucideChevronRight" />
+    }
+    </li>
+
+    <!-- Last Page Button -->
+    <li
+      class="page-item"
+      [class.disabled]="currentPage === totalPages"
+      title="Last page"
+      (click)="selectPage(totalPages)"
+    >
+    @if(lastLabel){
+    {{ lastLabel }}
+    }@else {
+    <hlm-icon name="lucideChevronsRight" />
+    }
+    </li>
+  </ul>
+</nav>
+}
+
+<!-- Optional: Page Jump -->
+@if(showPageJump){
+<div>
+  <input
+    type="number"
+    [(ngModel)]="jumpToPage"
+    [max]="totalPages"
+    min="1"
+    class="form-control w-20 mr-2.5"
+    placeholder="Jump to page"
+  />
+  <button class="btn btn-primary mt-1.5" (click)="selectPage(jumpToPage)">
+    Go
+  </button>
+</div>
+}

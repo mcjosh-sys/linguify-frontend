@@ -1,0 +1,124 @@
+<hlm-dialog [state]="state()!" (closed)="closeWidget()" class="cursor-default">
+  <div class="mt-1">
+    @if(_value()){
+    <div class="rounded-lg overflow-hidden relative shadow-lg">
+      <div
+        class="bg-rose-600 hover:bg-rose-500 text-rose-300 rounded-md p-1.5 absolute top-1 right-1 cursor-pointer"
+        (click)="onDelete()"
+      >
+        <span class="sr-only">Replace</span>
+        <hlm-icon name="lucideTrash" class="h-3 w-3" />
+      </div>
+      <img
+        [src]="
+          mediaType() === 'image'
+            ? _value() || selectedItem()?.src
+            : '/images/mp3.png'
+        "
+        alt="Image"
+        width="80"
+        height="80"
+        (click)="playAudio()"
+        class="object-fill"
+        [class.cursor-pointer]="mediaType() === 'audio'"
+      />
+    </div>
+    }@else {
+    <button
+      class="flex items-center justify-center gap-2 p-3 bg-muted/50 hover:bg-muted rounded-md text-sm"
+      (click)="openWidget()"
+    >
+      <hlm-icon
+        [name]="mediaType() === 'image' ? 'lucideImagePlus' : 'lucideFilePlus2'"
+        size="xs"
+      />
+      Add an @if(mediaType()==='image'){image}@else{audio}
+    </button>
+    }
+  </div>
+  <hlm-dialog-content
+    *brnDialogContent="let ctx"
+    class="w-full max-w-screen-md px-4 py-12 text-primary"
+  >
+    @if(isMediaLoading$ | async){
+    <div class="w-[200px] h-[200px]">
+      <app-loader />
+    </div>
+    }@else {
+    <div class="w-full flex items-center justify-between">
+      <div>
+        <h3 class="font-bold text-lg leading-tight">
+          @if(isImage()){ Images }@else {Audio}
+        </h3>
+        <span class="text-sm text-muted-foreground"
+          >Select an @if(isImage()){image}@else{audio}</span
+        >
+      </div>
+      <button
+        class="px-3 h-10 w-24 flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm rounded-md border-primary border-b-4 hover:bg-primary/90 active:border-b-0 disabled:border-b-0 disabled:bg-primary/90"
+        (click)="openCldWidget()"
+        [disabled]="isWidgetLoading()"
+      >
+        @if(isWidgetLoading()){
+        <hlm-icon name="lucideLoader2" class="h-4 w-4 animate-spin" />
+        }@else {
+        <hlm-icon name="lucideUpload" class="h-4 w-4" />
+        Upload }
+      </button>
+    </div>
+    <brn-separator hlmSeparator />
+    <input
+      hlmInput
+      class="w-full md:w-80"
+      [placeholder]="'Search ' + (isImage() ? 'image' : 'audio') + '...'"
+      [formControl]="_filterInput"
+    />
+    <div
+      class="min-w-40 max-h-80 overflow-auto grid grid-cols-3 md:grid-cols-4 gap-2 border border-border rounded-md"
+    >
+      @for(item of media$ | async; track item.id){
+      <div
+        class="text-muted-foreground flex flex-col items-center justify-end text-center rounded-md border-2 p-2 border-background hover:border-sky-500 hover:bg-sky-500/30 cursor-pointer"
+        [ngClass]="{
+          'border-sky-500 bg-sky-500/30': toBeSelectedItem()?.id === item.id,
+          'cursor-wait': audioState()?.loading,
+          'bg-sky-500/30': selectedItem()?.id === item.id
+        }"
+        (click)="onSelect(item)"
+      >
+        <img
+          [src]="mediaType() === 'image' ? item.src : '/images/mp3.png'"
+          alt="Image"
+          width="80"
+          height="80"
+          class="rounded-md shadow-lg"
+        />
+        <span class="text-primary">{{ item.name }}</span>
+      </div>
+      } @if(!(media$ | async)?.length){
+      <div
+        class="h-32 col-span-full flex items-center justify-center text-muted-foreground"
+      >
+        No {{ mediaType() }} files.
+      </div>
+      }
+    </div>
+    @if(true){
+    <div class="w-full flex justify-end gap-4">
+      <button
+        class="px-3 h-10 w-24 flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm rounded-md border-primary border-b-4 hover:bg-primary/90 active:border-b-0 disabled:border-b-0 disabled:bg-primary/90"
+        (click)="closeWidget()"
+      >
+        Cancel
+      </button>
+      <button
+        class="bg-sky-500 rounded-md w-20 h-10 border-b-4 border-sky-500 hover:bg-sky-500/90 active:border-b-0 disabled:bg-sky-700 disabled:border-b-0 disabled:pointer-events-none"
+        (click)="onOk()"
+        [disabled]="!toBeSelectedItem()"
+      >
+        OK
+      </button>
+    </div>
+    } }
+  </hlm-dialog-content>
+</hlm-dialog>

@@ -1,0 +1,38 @@
+<hlm-dialog [state]="state()!" (closed)="closeModal()">
+  <hlm-dialog-content *brnDialogContent="let ctx" class="max-w-md">
+    <hlm-dialog-header>
+      <div class="flex items-center w-full justify-center mt-5 mb-2">
+        <img src="/images/info.png" alt="info" height="80" width="80" />
+      </div>
+      <h3 hlmDialogTitle class="text-center text-primary font-bold text-2xl">
+        {{ title() }}
+      </h3>
+      <p hlmDialogDescription class="text-center text-base">
+        {{ message() }}
+      </p>
+    </hlm-dialog-header>
+
+    <hlm-dialog-footer class="mb-4 mt-2">
+      <div class="flex justify-center items-center gap-x-6 w-full">
+        <button
+          hlmBtn
+          variant="primary"
+          size="lg"
+          class="w-24"
+          (click)="closeModal()"
+        >
+          No
+        </button>
+        <button
+          hlmBtn
+          variant="danger"
+          size="lg"
+          class="w-24"
+          (click)="perfomAction(); closeModal()"
+        >
+          Yes
+        </button>
+      </div>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>

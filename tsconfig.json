@@ -1,5 +1,3 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -22,7 +20,81 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@services/*": [
+        "./src/app/services/*"
+      ],
+      "@components/*": [
+        "./src/app/components/*"
+      ],
+      "@pages/*": [
+        "./src/app/pages/*"
+      ],
+      "@store/*": [
+        "./src/app/store/*"
+      ],
+      "@guards/*": [
+        "./src/app/guards/*"
+      ],
+      "@interceptors/*": [
+        "./src/app/interceptors/*"
+      ],
+      "@tokens/*": [
+        "./src/app/tokens/*"
+      ],
+      "@spartan-ng/ui-button-helm": [
+        ".\\components/ui/ui-button-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-dialog-helm": [
+        ".\\components/ui/ui-dialog-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-icon-helm": [
+        ".\\components/ui/ui-icon-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-sheet-helm": [
+        ".\\components/ui/ui-sheet-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-sonner-helm": [
+        ".\\components/ui/ui-sonner-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-progress-helm": [
+        ".\\components/ui/ui-progress-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-avatar-helm": [
+        ".\\components/ui/ui-avatar-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-separator-helm": [
+        ".\\components/ui/ui-separator-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-table-helm": [
+        ".\\components/ui/ui-table-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-input-helm": [
+        ".\\components/ui/ui-input-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-menu-helm": [
+        ".\\components/ui/ui-menu-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-select-helm": [
+        ".\\components/ui/ui-select-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-typography-helm": [
+        ".\\components/ui/ui-typography-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-checkbox-helm": [
+        ".\\compnents/ui/ui-checkbox-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-tabs-helm": [
+        ".\\components/ui/ui-tabs-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-label-helm": [
+        ".\\components/ui/ui-label-helm/src/index.ts"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

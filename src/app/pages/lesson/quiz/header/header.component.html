@@ -1,0 +1,24 @@
+<header
+  class="lg:pt-[50px] pt-[20px] px-10 flex gap-x-7 items-center justify-between max-w-[1140px] mx-auto w-full"
+>
+  <hlm-icon
+    name="lucideX"
+    class="text-slate-500 hover:opacity-75 transition cursor-pointer"
+    (click)="openModal()"
+  />
+  <app-linear-progress [value]="percentage()" />
+  <div class="text-rose-500 flex items-center font-bold">
+    <img
+      src="/images/heart.svg"
+      alt="Heart"
+      width="28"
+      height="28"
+      class="mr-2"
+    />
+    @if(hasActiveSubscription()) {
+    <hlm-icon name="lucideInfinity" class="h-6 w-6 stroke-[3] shrink-0" />
+    }@else {
+    {{ hearts() }}
+    }
+  </div>
+</header>

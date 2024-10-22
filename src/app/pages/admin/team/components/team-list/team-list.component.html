@@ -1,0 +1,8 @@
+<app-pagination
+  [totalItems]="40"
+  [pageSize]="10"
+  [(currentPage)]="currentPage"
+  [maxVisiblePages]="5"
+  (pageChanged)="onPageChange($event)"
+  class="mt-10"
+/>

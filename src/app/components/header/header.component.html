@@ -1,0 +1,42 @@
+<header class="h-20 w-full border-b-2 border-slate-200 px-4">
+  <div
+    class="lg:max-w-screen-lg mx-auto flex items-center justify-between h-full"
+  >
+    <div class="pt-8 pl-4 pb-7 flex items-center gap-x-3">
+      <img
+        src="/images/mascot.svg"
+        loading="lazy"
+        height="40"
+        width="40"
+        alt="mascot"
+      />
+      <h1 class="text-2xl font-extrabold text-green-600 tracking-wide">
+        Liguify
+      </h1>
+    </div>
+    @if(loading()){
+    <div>
+      <hlm-icon
+        size="sm"
+        name="lucideLoader"
+        class="text-muted-foreground animate-spin"
+      />
+    </div>
+    } @else { @if(user()) {
+    <div class="rounded-full flex">
+      <app-user-button class="w-10 h-10" />
+    </div>
+    }@else{
+    <div>
+      <button
+        hlmBtn
+        variant="ghost"
+        size="lg"
+        (click)="router.navigate(['signin'])"
+      >
+        log in
+      </button>
+    </div>
+    } }
+  </div>
+</header>

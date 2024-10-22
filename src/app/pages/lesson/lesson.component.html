@@ -1,0 +1,11 @@
+@if(loading){ 
+  <app-loading />
+}@else {
+<app-quiz
+  [initialLessonId]="this.lesson.id"
+  [initialLessonChallenges]="this.lesson.challenges"
+  [initialHearts]="this.userProgress.hearts"
+  [initialPercentage]="this.initialPercentage()"
+  [userSubscription]="userSubscription"
+/>
+}

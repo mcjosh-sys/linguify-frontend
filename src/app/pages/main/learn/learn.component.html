@@ -1,0 +1,34 @@
+@if(loading){
+<app-loading />
+}@else{
+<div class="flex flex-row-reverse gap-[48px] px-6">
+  <app-sticky-wrapper>
+    <app-user-progress
+      [activeCourse]="userProgress.activeCourse"
+      [hearts]="userProgress.hearts!"
+      [points]="userProgress.points!"
+      [hasActiveSubscription]="!!userSubscription?.isActive"
+    />
+    @if(!!!userSubscription?.isActive){
+      <app-promo />
+    }
+    <app-quests-component [points]="userProgress.points" />
+  </app-sticky-wrapper>
+  <app-feed-wrapper>
+    <app-feed-header [title]="userProgress.activeCourse?.title!" />
+    @for(unit of units; track unit.id) {
+    <div class="mb-10">
+      <app-unit
+        [id]="unit.id"
+        [order]="unit.order"
+        [description]="unit.description"
+        [title]="unit.title"
+        [lessons]="unit.lessons"
+        [activeLesson]="courseProgress.activeLesson"
+        [activeLessonPercentage]="lessonPercentage!"
+      />
+    </div>
+    }
+  </app-feed-wrapper>
+</div>
+}

@@ -32,8 +32,8 @@ export class TeamComponent {
   protected readonly team = signal<Staff[]>([])
 
   constructor(
-    private adminService: AdminService,
-    private gMS: GenericModalService
+    private readonly adminService: AdminService,
+    private readonly gm: GenericModalService
   ) {
     forkJoin({
       isAdmin: this.adminService.checkIfAdmin(),
@@ -52,7 +52,7 @@ export class TeamComponent {
   }
 
   openInvitationMotal() {
-    this.gMS.open({
+    this.gm.open({
       component: InvitationComponent,
       props: {},
       title: 'Invitation',

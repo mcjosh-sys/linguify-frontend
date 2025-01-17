@@ -1,8 +1,10 @@
 import { LoaderComponent } from '@/app/components/loader/loader.component';
+import { RouterError } from '@/app/models';
 import { Unit } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
+import { RouterStateService } from '@/app/services/router-state.service';
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { filter, finalize, switchMap } from 'rxjs';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { UnitFormComponent } from '../components/unit-form/unit-form.component';
@@ -26,26 +28,21 @@ export class UnitComponent {
   protected readonly unit = signal<Unit | null>(null);
   protected readonly loading = signal<boolean>(false);
 
-  private readonly _navigationExtras: NavigationExtras = {
-    skipLocationChange: true,
-    state: {
-      error: {
-        message: {
-          title: '404: Unit Not Found',
-          description: "The unit you're trying to access does not exist.",
-        },
-        redirect: {
-          text: 'units page',
-          url: '/admin/units',
-        },
-      },
+  private readonly notFoundError: RouterError = {
+    message: {
+      title: '404: Unit Not Found',
+      description: "The unit you're trying to access does not exist.",
+    },
+    redirect: {
+      label: 'units page',
+      url: '/admin/units',
     },
   };
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private adminService: AdminService
+    private readonly route: ActivatedRoute,
+    private readonly routerState: RouterStateService,
+    private readonly adminService: AdminService
   ) {
     this.route.paramMap
       .pipe(
@@ -64,11 +61,7 @@ export class UnitComponent {
           this.unit.set(data);
         },
         error: (_err: any) => {
-          this.router.navigateByUrl('/admin/error', this._navigationExtras);
-          // if (err.status === 404) {
-          // } else {
-          //   console.error(err.message);
-          // }
+          this.routerState.setError(this.notFoundError, '/admin/error');
         },
       });
   }

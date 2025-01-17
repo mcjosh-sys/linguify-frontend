@@ -34,7 +34,7 @@
         [class]="
           hlm(
             'flex items-center w-full p-2 px-4 rounded-xl hover:bg-gray-200/50',
-            isCurrentUser(progress.userId!) && 'bg-indigo-200 hover:bg-indigo-100'
+            isCurrentUser(progress.userId!) && 'bg-sky-100 hover:bg-sky-200'
           )
         "
       >
@@ -42,7 +42,7 @@
           [class]="
             hlm(
               'font-bold text-lime-700 mr-4',
-              isCurrentUser(progress.userId!) && 'text-indigo-700'
+              isCurrentUser(progress.userId!) && 'text-sky-700'
             )
           "
         >
@@ -59,18 +59,21 @@
         <p
           [class]="
             hlm(
-              'font-bold text-neutral-800 flex-1',
-              isCurrentUser(progress.userId!) && 'text-indigo-700'
+              'font-bold text-neutral-800 flex-1 flex items-center gap-2',
+              isCurrentUser(progress.userId!) && 'text-sky-700'
             )
           "
         >
           {{ progress.user?.userName }}
+          @if(isCurrentUser(progress.userId!)){
+            <span class="text-xs font-light italic">(you)</span>
+          }
         </p>
         <p
           [class]="
             hlm(
               'text-muted-foreground',
-              isCurrentUser(progress.userId!) && 'text-indigo-700'
+              isCurrentUser(progress.userId!) && 'text-sky-700'
             )
           "
         >

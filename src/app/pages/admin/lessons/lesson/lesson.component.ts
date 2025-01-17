@@ -1,8 +1,10 @@
 import { LoaderComponent } from '@/app/components/loader/loader.component';
+import { RouterError } from '@/app/models';
 import { Lesson } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
+import { RouterStateService } from '@/app/services/router-state.service';
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { filter, finalize, switchMap } from 'rxjs';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { LessonFormComponent } from '../components/lesson-form/lesson-form.component';
@@ -26,26 +28,21 @@ export class LessonComponent {
   protected readonly lesson = signal<Lesson | null>(null);
   protected readonly loading = signal<boolean>(false);
 
-  private readonly _navigationExtras: NavigationExtras = {
-    skipLocationChange: true,
-    state: {
-      error: {
-        message: {
-          title: '404: Lesson Not Found',
-          description: "The lesson you're trying to access does not exist.",
-        },
-        redirect: {
-          text: 'lessons page',
-          url: '/admin/lessons',
-        },
-      },
+  private readonly notFoundError: RouterError = {
+    message: {
+      title: '404: Lesson Not Found',
+      description: "The lesson you're trying to access does not exist.",
+    },
+    redirect: {
+      label: 'lessons page',
+      url: '/admin/lessons',
     },
   };
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private adminService: AdminService
+    private readonly route: ActivatedRoute,
+    private readonly routerState: RouterStateService,
+    private readonly adminService: AdminService
   ) {
     this.route.paramMap
       .pipe(
@@ -64,12 +61,7 @@ export class LessonComponent {
           this.lesson.set(data);
         },
         error: (_err: any) => {
-          this.router.navigateByUrl('/admin/error', this._navigationExtras);
-          // if (err.status === 404) {
-          //   this.router.navigateByUrl('notfound', { skipLocationChange: true });
-          // } else {
-          //   console.log(err.message);
-          // }
+          this.routerState.setError(this.notFoundError, '/admin/error');
         },
       });
   }

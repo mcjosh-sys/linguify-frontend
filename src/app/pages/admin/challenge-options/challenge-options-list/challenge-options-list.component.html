@@ -73,7 +73,7 @@
     <hlm-th *brnHeaderDef> Challenge </hlm-th>
     <hlm-td *brnCellDef="let element">
       <a
-        [routerLink]="['/admin', 'challenges', element.challenge.id]"
+        [routerLink]="['/admin', 'challenges', element.challengeId]"
         class="text-sky-500 hover:underline"
       >
         {{ element.challenge.question }}

@@ -1,8 +1,10 @@
 import { LoaderComponent } from '@/app/components/loader/loader.component';
+import { RouterError } from '@/app/models';
 import { Course } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
+import { RouterStateService } from '@/app/services/router-state.service';
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { catchError, filter, finalize, map, of, switchMap } from 'rxjs';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { CourseFormComponent } from '../components/course-form/course-form.component';
@@ -26,26 +28,21 @@ export class CourseComponent {
   protected readonly course = signal<Course | null>(null);
   protected readonly loading = signal<boolean>(false);
 
-  private readonly _notFoundExtras: NavigationExtras = {
-    skipLocationChange: true,
-    state: {
-      error: {
-        message: {
-          title: '404: Course Not Found',
-          description: "The course you're trying to access does not exist.",
-        },
-        redirect: {
-          text: 'courses page',
-          url: '/admin/courses',
-        },
-      },
+  private readonly notFoundError: RouterError = {
+    message: {
+      title: '404: Course Not Found',
+      description: "The course you're trying to access does not exist.",
+    },
+    redirect: {
+      label: 'courses page',
+      url: '/admin/courses',
     },
   };
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private adminService: AdminService
+    private readonly route: ActivatedRoute,
+    private readonly adminService: AdminService,
+    private readonly routerState: RouterStateService
   ) {
     this.route.paramMap
       .pipe(
@@ -70,12 +67,7 @@ export class CourseComponent {
       catchError((err: any) => {
         console.error(err.message);
 
-        this.router.navigateByUrl('/admin/error', this._notFoundExtras);
-        // if (err.status === 404) {
-        // } else {
-        //   console.error(err.message);
-        // }
-
+        this.routerState.setError(this.notFoundError, '/admin/error');
         return of(err);
       }),
       finalize(() => this.loading.set(false))

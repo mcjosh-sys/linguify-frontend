@@ -1,9 +1,10 @@
 import { LoaderComponent } from '@/app/components/loader/loader.component';
 import { Lesson } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
+import { ConfirmModalService } from '@/app/services/confirm-modal.service';
 import { LoadingService } from '@/app/services/loading.service';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { AsyncPipe, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
 import {
   Component,
   computed,
@@ -28,10 +29,6 @@ import {
   HlmButtonDirective,
   HlmButtonModule,
 } from '@spartan-ng/ui-button-helm';
-import {
-  HlmCheckboxCheckIconComponent,
-  HlmCheckboxComponent,
-} from '@spartan-ng/ui-checkbox-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
@@ -59,7 +56,6 @@ import { CreateButtonComponent } from '../../components/create-button/create-but
 import { EmptyListComponent } from '../../components/empty-list/empty-list.component';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { errorHandler } from '../../courses/components/course-form/course-form.component';
-import { ConfirmModalService } from '@/app/services/confirm-modal.service';
 
 @Component({
   selector: 'app-lesson-list',
@@ -76,13 +72,9 @@ import { ConfirmModalService } from '@/app/services/confirm-modal.service';
     HlmButtonModule,
     HlmButtonDirective,
 
-    DecimalPipe,
     TitleCasePipe,
     HlmIconComponent,
     HlmInputDirective,
-
-    HlmCheckboxCheckIconComponent,
-    HlmCheckboxComponent,
 
     BrnSelectModule,
     HlmSelectModule,
@@ -152,7 +144,7 @@ export class LessonsListComponent {
     const end = this._displayedIndices().end + 1;
     const units = this._filteredLessons();
     if (!sort) {
-      return units!.slice(start, end);
+      return units.slice(start, end);
     }
     return [...units]
       .sort(
@@ -175,11 +167,11 @@ export class LessonsListComponent {
     this._displayedIndices.set({ start: startIndex, end: endIndex });
 
   constructor(
-    private adminService: AdminService,
-    private loadingService: LoadingService,
-    private clipboard: Clipboard,
-    private router: Router,
-    private cmService: ConfirmModalService
+    private readonly adminService: AdminService,
+    private readonly loadingService: LoadingService,
+    private readonly clipboard: Clipboard,
+    private readonly router: Router,
+    private readonly cmService: ConfirmModalService
   ) {
     this.fetchLessons$.pipe(switchMap(() => this.handleFetch())).subscribe();
     this.fetchLessons$.next();

@@ -2,9 +2,10 @@ import { LoaderComponent } from '@/app/components/loader/loader.component';
 import { ChallengeOption } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
 import { AudioService } from '@/app/services/audio.service';
+import { ConfirmModalService } from '@/app/services/confirm-modal.service';
 import { LoadingService } from '@/app/services/loading.service';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { AsyncPipe, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
 import {
   Component,
   computed,
@@ -13,9 +14,8 @@ import {
   TrackByFunction,
 } from '@angular/core';
 import {
-  takeUntilDestroyed,
   toObservable,
-  toSignal,
+  toSignal
 } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -33,10 +33,6 @@ import {
   HlmButtonDirective,
   HlmButtonModule,
 } from '@spartan-ng/ui-button-helm';
-import {
-  HlmCheckboxCheckIconComponent,
-  HlmCheckboxComponent,
-} from '@spartan-ng/ui-checkbox-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
@@ -55,7 +51,6 @@ import { CreateButtonComponent } from '../../components/create-button/create-but
 import { EmptyListComponent } from '../../components/empty-list/empty-list.component';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { errorHandler } from '../../courses/components/course-form/course-form.component';
-import { ConfirmModalService } from '@/app/services/confirm-modal.service';
 
 @Component({
   selector: 'app-challenge-options-list',
@@ -72,13 +67,9 @@ import { ConfirmModalService } from '@/app/services/confirm-modal.service';
     HlmButtonModule,
     HlmButtonDirective,
 
-    DecimalPipe,
     TitleCasePipe,
     HlmIconComponent,
     HlmInputDirective,
-
-    HlmCheckboxCheckIconComponent,
-    HlmCheckboxComponent,
 
     BrnSelectModule,
     HlmSelectModule,
@@ -149,7 +140,7 @@ export class ChallengeOptionsListComponent {
     const end = this._displayedIndices().end + 1;
     const challenges = this._filteredChallengeOptions();
     if (!sort) {
-      return challenges!.slice(start, end);
+      return challenges.slice(start, end);
     }
     return [...challenges]
       .sort(
@@ -171,12 +162,12 @@ export class ChallengeOptionsListComponent {
   }: PaginatorState) =>
     this._displayedIndices.set({ start: startIndex, end: endIndex });
   constructor(
-    private adminService: AdminService,
-    private loadingService: LoadingService,
-    private audioService: AudioService,
-    private clipboard: Clipboard,
-    private router: Router,
-    private cmService: ConfirmModalService
+    private readonly adminService: AdminService,
+    private readonly loadingService: LoadingService,
+    private readonly audioService: AudioService,
+    private readonly clipboard: Clipboard,
+    private readonly router: Router,
+    private readonly cmService: ConfirmModalService
   ) {
     this.fetchChallengeOptions$
       .pipe(switchMap(() => this.handleFetch()))

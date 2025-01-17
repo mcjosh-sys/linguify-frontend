@@ -1,9 +1,11 @@
 import { LoaderComponent } from '@/app/components/loader/loader.component';
+import { RouterError } from '@/app/models';
 import { ChallengeOption } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
+import { RouterStateService } from '@/app/services/router-state.service';
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { filter, finalize, switchMap, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { filter, finalize, switchMap } from 'rxjs';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { ChallengeOptionFormComponent } from '../components/challenge-option-form/challenge-option-form.component';
 
@@ -26,26 +28,21 @@ export class ChallengeOptionComponent {
   protected readonly challengeOption = signal<ChallengeOption | null>(null);
   protected readonly loading = signal<boolean>(false);
 
-  private readonly _navigationExtras: NavigationExtras = {
-    skipLocationChange: true,
-    state: {
-      error: {
-        message: {
-          title: '404: Option Not Found',
-          description: "The challenge option you're trying to access does not exist.",
-        },
-        redirect: {
-          text: 'challenge options page',
-          url: '/admin/challenge-options',
-        },
-      },
+  private readonly notFoundError: RouterError = {
+    message: {
+      title: '404: Option Not Found',
+      description: "The challenge option you're trying to access does not exist.",
+    },
+    redirect: {
+      label: 'challenge options page',
+      url: '/admin/challenge-options',
     },
   };
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private adminService: AdminService
+    private readonly route: ActivatedRoute,
+    private readonly routerState: RouterStateService,
+    private readonly adminService: AdminService
   ) {
     this.route.paramMap
       .pipe(
@@ -63,12 +60,7 @@ export class ChallengeOptionComponent {
           this.challengeOption.set(data);
         },
         error: (_err: any) => {
-          this.router.navigateByUrl('/admin/error', this._navigationExtras);
-          // if (err.status === 404) {
-          //   this.router.navigateByUrl('notfound', { skipLocationChange: true });
-          // } else {
-          //   console.log(err.message);
-          // }
+          this.routerState.setError(this.notFoundError, '/admin/error');
         },
       });
   }

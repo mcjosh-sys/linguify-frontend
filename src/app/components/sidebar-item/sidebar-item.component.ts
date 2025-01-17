@@ -2,26 +2,22 @@ import { EventService } from '@/app/services/event.service';
 import { Component, input, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { BrnSheetCloseDirective } from '@spartan-ng/ui-sheet-brain';
-import { HlmSheetCloseDirective } from '@spartan-ng/ui-sheet-helm';
 
 @Component({
   selector: 'app-sidebar-item',
   standalone: true,
   imports: [
     HlmButtonDirective,
-    HlmSheetCloseDirective,
-    BrnSheetCloseDirective,
     RouterLink,
     RouterLinkActive,
   ],
   template: `
     <a
       hlmBtn
-      class="justify-start h-[52px] w-full"
+      class="justify-start h-[52px] w-full sidebar-item-link"
       variant="sidebar"
       [routerLink]="link()"
-      routerLinkActive="active-sidebar-item-link"
+      routerLinkActive="active"
       (click)="close()"
       #sidebarLink
       brnSheetClose
@@ -38,7 +34,7 @@ export class SidebarItemComponent {
   public readonly link = input<string>('');
   active = signal<boolean>(false);
 
-  constructor(private eventService: EventService) {}
+  constructor(private readonly eventService: EventService) {}
   close() {
     this.eventService.emit({ name: 'close-sheet' });
   }

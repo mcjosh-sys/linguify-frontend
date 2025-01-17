@@ -1,11 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { RouterStateService } from '../services/router-state.service';
 
 export const errorGuard: CanActivateFn = (_route, _state) => {
   const router = inject(Router);
-  const navExtras = router.getCurrentNavigation()?.extras;
+  const routerState = inject(RouterStateService);
 
-  if (!navExtras?.state && !navExtras?.state?.['error']) {
+  if (!routerState.hasError) {
     router.navigateByUrl('/not-found', { skipLocationChange: true });
     return false;
   }

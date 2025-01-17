@@ -1,8 +1,10 @@
 import { LoaderComponent } from '@/app/components/loader/loader.component';
+import { RouterError } from '@/app/models';
 import { Challenge } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
+import { RouterStateService } from '@/app/services/router-state.service';
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { filter, finalize, switchMap } from 'rxjs';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { ChallengeFormComponent } from '../components/challenge-form/challenge-form.component';
@@ -26,26 +28,21 @@ export class ChallengeComponent {
   protected readonly challenge = signal<Challenge | null>(null);
   protected readonly loading = signal<boolean>(false);
 
-  private readonly _navigationExtras: NavigationExtras = {
-    skipLocationChange: true,
-    state: {
-      error: {
-        message: {
-          title: '404: Challenge Not Found',
-          description: "The challenge you're trying to access does not exist.",
-        },
-        redirect: {
-          text: 'challenges page',
-          url: '/admin/challenges',
-        },
+  private readonly notFoundError: RouterError = {
+      message: {
+        title: '404: Challenge Not Found',
+        description: "The challenge you're trying to access does not exist.",
       },
-    },
+      redirect: {
+        label: 'challenges page',
+        url: '/admin/challenges',
+      },
   };
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private adminService: AdminService
+    private readonly route: ActivatedRoute,
+    private readonly routerState: RouterStateService,
+    private readonly adminService: AdminService
   ) {
     this.route.paramMap
       .pipe(
@@ -64,12 +61,7 @@ export class ChallengeComponent {
           this.challenge.set(data);
         },
         error: (_err: any) => {
-          this.router.navigateByUrl('/admin/error', this._navigationExtras);
-          // if (err.status === 404) {
-          //   this.router.navigateByUrl('notfound', { skipLocationChange: true });
-          // } else {
-          //   console.log(err.message);
-          // }
+          this.routerState.setError( this.notFoundError,'/admin/error');
         },
       });
   }

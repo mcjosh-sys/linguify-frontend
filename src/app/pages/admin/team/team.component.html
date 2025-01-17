@@ -7,13 +7,13 @@
   [showSeparator]="!isAdmin()"
 />
 @if(isAdmin()){
-<hlm-tabs tab="all" class="w-full">
+<hlm-tabs tab="team" class="w-full">
   <hlm-tabs-list class="w-full grid grid-cols-2 mt-4" aria-label="teams">
-    <button hlmTabsTrigger="all">All</button>
+    <button hlmTabsTrigger="team">Team</button>
     <button hlmTabsTrigger="invitations">Invitations</button>
   </hlm-tabs-list>
 
-  <div hlmTabsContent="all">
+  <div hlmTabsContent="team">
     <app-admin-team-list [team]="team()" />
   </div>
   <div hlmTabsContent="invitations">

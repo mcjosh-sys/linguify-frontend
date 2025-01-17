@@ -1,4 +1,5 @@
 import { ClerkService } from '@/app/services/clerk.service';
+import { RouterStateService } from '@/app/services/router-state.service';
 import {
   Component,
   DestroyRef,
@@ -7,7 +8,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
@@ -20,20 +20,17 @@ import { Router } from '@angular/router';
 })
 export class SignInComponent {
   @ViewChild('containerRef') containerRef!: ElementRef<HTMLDivElement>;
-  private _signInUrl = signal<string>('/learn?__auth=true');
+  private readonly _signInUrl = signal<string>('/learn?__auth=true');
 
   constructor(
-    private clerkService: ClerkService,
-    private router: Router,
-    private destroyRef: DestroyRef
+    private readonly clerkService: ClerkService,
+    private readonly routerState: RouterStateService,
+    private readonly destroyRef: DestroyRef
   ) {
-    const navigation = this.router.getCurrentNavigation()
     if (
-      navigation?.extras &&
-      navigation.extras.state &&
-      navigation.extras.state['returnUrl']
+      this.routerState.afterAuthUrl
     ) {
-      this._signInUrl.set(navigation.extras.state['returnUrl']);
+      this._signInUrl.set(this.routerState.afterAuthUrl);
     }
   }
 

@@ -1,27 +1,25 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, NavigationExtras, Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { map, of, switchMap } from 'rxjs';
+import { RouterError } from '../models';
 import { AdminService } from '../services/admin.service';
+import { RouterStateService } from '../services/router-state.service';
 import { UserService } from '../services/user.service';
 
-export const adminGuard: CanActivateFn = (route, state) => {
+export const adminGuard: CanActivateFn = (_route, _state) => {
   const router = inject(Router);
+  const routerState = inject(RouterStateService);
   const userService = inject(UserService);
   const adminService = inject(AdminService);
 
-  const unauthorizedExtras: NavigationExtras = {
-    skipLocationChange: true,
-    state: {
-      error: {
-        message: {
-          title: '403 Unauthorized',
-          description: 'You are not authorized to access this page.',
-        },
-        redirect: {
-          text: 'Learn Page',
-          url: '/learn',
-        },
-      },
+  const unauthorized: RouterError = {
+    message: {
+      title: '403 Unauthorized',
+      description: 'You are not authorized to access this page.',
+    },
+    redirect: {
+      label: 'Learn Page',
+      url: '/learn',
     },
   };
 
@@ -31,15 +29,8 @@ export const adminGuard: CanActivateFn = (route, state) => {
         if (isAuthenticated) {
           return adminService
             .checkIfStaff()
-            .pipe(map((data: any) => data.isAdmin));
         }
-
-        const navExtras: NavigationExtras = {
-          state: {
-            returnUrl: state.url,
-          },
-        };
-        router.navigateByUrl('/signin', navExtras);
+        router.navigateByUrl('/signin');
         return of(false);
       })
     )
@@ -48,7 +39,8 @@ export const adminGuard: CanActivateFn = (route, state) => {
         if (isAdmin) {
           return true;
         }
-        router.navigate(['/error'], unauthorizedExtras);
+        console.log({isAdmin})
+        routerState.setError(unauthorized);
         return false;
       })
     );

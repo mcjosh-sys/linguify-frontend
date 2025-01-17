@@ -1,4 +1,4 @@
-import { Course, Lesson, Unit } from '@/app/models/admin.models';
+import { Lesson, Unit } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { Component, input, signal } from '@angular/core';
@@ -8,21 +8,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import { lucideLoader2, lucideSave } from '@ng-icons/lucide';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import {
-  HlmInputDirective,
-  HlmInputErrorDirective,
+  HlmInputDirective
 } from '@spartan-ng/ui-input-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
-import { finalize, firstValueFrom, map, Observable } from 'rxjs';
-import { MediaUploadComponent } from '../../../components/form-controls/media/media.component';
-import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
+import { finalize, firstValueFrom, map, Observable } from 'rxjs';
 import { errorHandler } from '../../../courses/components/course-form/course-form.component';
 
 @Component({
@@ -33,11 +31,9 @@ import { errorHandler } from '../../../courses/components/course-form/course-for
     ReactiveFormsModule,
     AsyncPipe,
     HlmInputDirective,
-    HlmInputErrorDirective,
     HlmLabelDirective,
     HlmButtonDirective,
     HlmIconComponent,
-    MediaUploadComponent,
     BrnSelectImports,
     HlmSelectImports,
   ],
@@ -120,9 +116,9 @@ export class LessonFormComponent {
   protected readonly pending = signal(false);
 
   constructor(
-    private formBuilder: FormBuilder,
-    private adminService: AdminService,
-    private router: Router
+    private readonly formBuilder: FormBuilder,
+    private readonly adminService: AdminService,
+    private readonly router: Router
   ) {}
 
   ngOnInit() {

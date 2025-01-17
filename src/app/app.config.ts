@@ -14,7 +14,6 @@ import {
 } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { firstValueFrom } from 'rxjs';
@@ -28,13 +27,12 @@ import { heartsModalReducer } from './store/reducers/hearts-modal.reducer';
 import { mediaWidgetReducer } from './store/reducers/media-widget.reducer';
 import { practiceModalReducer } from './store/reducers/practice-modal.reducer';
 
-
 function initializeClerkService(clerkService: ClerkService) {
   return () =>
     firstValueFrom(clerkService.load())
       .then((value) => {
         if (value) {
-          value && console.log('Clerk is loaded successfully');
+          console.log('Clerk is loaded successfully');
         }
       })
       .catch((error: any) =>
@@ -43,6 +41,10 @@ function initializeClerkService(clerkService: ClerkService) {
 }
 
 function initializeThemeService(_themeService: ThemeService) {
+  return () => new Promise<void>((resolve) => resolve());
+}
+
+function initializeRouterStateService(_routerStateService: RouterStateService) {
   return () => new Promise<void>((resolve) => resolve());
 }
 
@@ -65,14 +67,20 @@ export const appConfig: ApplicationConfig = {
     RouterStateService,
     {
       provide: APP_INITIALIZER,
+      useFactory: initializeClerkService,
+      deps: [ClerkService],
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
       useFactory: initializeThemeService,
       deps: [ThemeService],
       multi: true,
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: initializeClerkService,
-      deps: [ClerkService],
+      useFactory: initializeRouterStateService,
+      deps: [RouterStateService],
       multi: true,
     },
   ],

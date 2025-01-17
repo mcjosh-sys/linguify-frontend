@@ -419,9 +419,9 @@ export class AdminService {
         }
         return staff.userId === this.userId
       })
-      if (index > -1) {
+      if (index > -1 && current) {
         team.splice(index, 1)
-        team.unshift(current!)
+        team.unshift(current)
       }
       return team
     }))

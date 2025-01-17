@@ -79,7 +79,7 @@
     <hlm-th *brnHeaderDef> Lesson </hlm-th>
     <hlm-td *brnCellDef="let element">
       <a
-        [routerLink]="['/admin', 'lessons', element.lesson.id]"
+        [routerLink]="['/admin', 'lessons', element.lessonId]"
         class="text-sky-500 hover:underline"
       >
         {{ element.lesson.title }}

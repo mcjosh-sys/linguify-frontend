@@ -13,18 +13,18 @@ import { BehaviorSubject, distinctUntilChanged, ReplaySubject } from 'rxjs';
   providedIn: 'root',
 })
 export class ThemeService {
-  private _platformId = inject(PLATFORM_ID);
-  private _renderer = inject(RendererFactory2).createRenderer(null, null);
-  private _document = inject(DOCUMENT);
+  private readonly _platformId = inject(PLATFORM_ID);
+  private readonly _renderer = inject(RendererFactory2).createRenderer(null, null);
+  private readonly _document = inject(DOCUMENT);
 
-  private _theme$ = new ReplaySubject<'light' | 'dark'>(1);
+  private readonly _theme$ = new ReplaySubject<'light' | 'dark'>(1);
   public theme$ = this._theme$.asObservable();
 
   private _isDarkMode = false;
 
-  private _shouldDisableDarkMode$ = new BehaviorSubject<boolean>(false);
+  private readonly _shouldDisableDarkMode$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private router: Router) {
+  constructor(private readonly router: Router) {
     this.syncThemeFromLocalStorage();
     this.toggleClassOnThemeChanges();
 
@@ -38,7 +38,6 @@ export class ThemeService {
             // console.log('dark mode is disabled')
           } else {
             this._renderer.addClass(this._document.documentElement, 'dark');
-            // console.log('dark mode is enabled');
           }
         }
       });
@@ -57,7 +56,7 @@ export class ThemeService {
 
   private syncThemeFromLocalStorage(): void {
     if (isPlatformBrowser(this._platformId)) {
-      const storedTheme = localStorage.getItem('theme') || 'light';
+      const storedTheme = localStorage.getItem('theme') ?? 'light';
       this._isDarkMode = storedTheme === 'dark';
       this._theme$.next(
         localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'

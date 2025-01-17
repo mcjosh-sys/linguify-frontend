@@ -1,34 +1,88 @@
+import { LoaderComponent } from '@/app/components/loader/loader.component';
 import { PaginationComponent } from '@/app/components/pagination/pagination.component';
 import { Staff } from '@/app/models/admin.models';
+import { AdminService } from '@/app/services/admin.service';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
 import {
   Component,
   computed,
+  effect,
   input,
   signal,
   TrackByFunction,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import {
+  HlmAvatarComponent,
+  HlmAvatarFallbackDirective,
+  HlmAvatarImageDirective,
+} from '@spartan-ng/ui-avatar-helm';
+import {
+  HlmButtonDirective,
+  HlmButtonModule,
+} from '@spartan-ng/ui-button-helm';
+import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
+import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
+import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
+import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
+import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
+import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
+import {
+  BrnTableModule,
   PaginatorState,
   useBrnColumnManager,
 } from '@spartan-ng/ui-table-brain';
-import { debounceTime } from 'rxjs';
+import { HlmTableModule } from '@spartan-ng/ui-table-helm';
+import { debounceTime, finalize } from 'rxjs';
+import { CreateButtonComponent } from '../../../components/create-button/create-button.component';
+import { EmptyListComponent } from '../../../components/empty-list/empty-list.component';
+import { PageHeaderComponent } from '../../../components/page-header/page-header.component';
 
 @Component({
   selector: 'app-admin-team-list',
   standalone: true,
-  imports: [PaginationComponent],
+  imports: [
+    PaginationComponent,
+    HlmAvatarComponent,
+    HlmAvatarImageDirective,
+    HlmAvatarFallbackDirective,
+
+    FormsModule,
+
+    BrnMenuTriggerDirective,
+    HlmMenuModule,
+
+    BrnTableModule,
+    HlmTableModule,
+
+    HlmButtonModule,
+    HlmButtonDirective,
+
+    TitleCasePipe,
+    HlmIconComponent,
+    HlmInputDirective,
+
+    BrnSelectModule,
+    HlmSelectModule,
+
+    AsyncPipe,
+
+    EmptyListComponent,
+    LoaderComponent,
+    PageHeaderComponent,
+    CreateButtonComponent,
+  ],
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.css',
 })
 export class TeamListComponent {
   readonly team = input<Staff[]>([]);
-  protected readonly loading = signal<boolean>(false);
-
-  currentPage: number = 1;
+  readonly isAdmin = input<boolean>(false)
+  protected readonly loading = signal<boolean>(true);
 
   protected readonly rawFilterInput = signal('');
-  protected readonly emailFilter = signal('');
+  protected readonly filter = signal('');
   private readonly debouncedFilter = toSignal(
     toObservable(this.rawFilterInput).pipe(debounceTime(300))
   );
@@ -38,9 +92,10 @@ export class TeamListComponent {
   protected readonly pageSize = signal(this.availablePageSizes[0]);
 
   protected readonly columnManager = useBrnColumnManager({
-    title: { visible: true, label: 'Title' },
-    imageSrc: { visible: true, label: 'Image Src' },
-    units: { visible: true, label: 'Units' },
+    name: { visible: true, label: 'Name' },
+    role: { visible: true, label: 'Role' },
+    email: { visible: true, label: 'Email' },
+    joined: { visible: true, label: 'Joined' },
   });
   protected readonly allDisplayedColumns = computed(() => [
     ...this.columnManager.displayedColumns(),
@@ -48,10 +103,10 @@ export class TeamListComponent {
   ]);
 
   private readonly filteredTeam = computed(() => {
-    const filter = this.emailFilter()?.trim()?.toLocaleLowerCase();
+    const filter = this.filter()?.trim()?.toLocaleLowerCase();
     if (filter && filter.length > 0) {
       return this.team().filter((t) =>
-        t.user.email.toLocaleLowerCase().includes(filter)
+        t.user.firstName.concat(' ' +t.user.lastName).toLocaleLowerCase().includes(filter)
       );
     }
     return this.team();
@@ -83,9 +138,10 @@ export class TeamListComponent {
   }: PaginatorState) =>
     this.displayedIndices.set({ start: startIndex, end: endIndex });
 
-  onPageChange(page: number): void {
-    console.log('Page changed to:', page);
-    this.currentPage = page;
-    // Fetch data based on the current page
+  constructor(private adminService: AdminService) {
+
+    effect(() => this.filter.set(this.debouncedFilter() ?? ''), {
+      allowSignalWrites: true,
+    });
   }
 }

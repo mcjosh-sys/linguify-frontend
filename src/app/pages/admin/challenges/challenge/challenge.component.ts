@@ -29,14 +29,14 @@ export class ChallengeComponent {
   protected readonly loading = signal<boolean>(false);
 
   private readonly notFoundError: RouterError = {
-      message: {
-        title: '404: Challenge Not Found',
-        description: "The challenge you're trying to access does not exist.",
-      },
-      redirect: {
-        label: 'challenges page',
-        url: '/admin/challenges',
-      },
+    message: {
+      title: '404: Challenge Not Found',
+      description: "The challenge you're trying to access does not exist.",
+    },
+    redirect: {
+      label: 'challenges page',
+      url: '/admin/challenges',
+    },
   };
 
   constructor(
@@ -57,11 +57,11 @@ export class ChallengeComponent {
         })
       )
       .subscribe({
-        next: (data: any) => {
-          this.challenge.set(data);
+        next: (res: any) => {
+          this.challenge.set(res.data);
         },
         error: (_err: any) => {
-          this.routerState.setError( this.notFoundError,'/admin/error');
+          this.routerState.setError(this.notFoundError, '/admin/error');
         },
       });
   }

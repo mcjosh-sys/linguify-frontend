@@ -8,21 +8,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import { lucideLoader2, lucideSave } from '@ng-icons/lucide';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import {
-  HlmInputDirective,
-  HlmInputErrorDirective,
+  HlmInputDirective
 } from '@spartan-ng/ui-input-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
-import { finalize, firstValueFrom, map, Observable } from 'rxjs';
-import { MediaUploadComponent } from '../../../components/form-controls/media/media.component';
-import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
+import { finalize, firstValueFrom, map, Observable } from 'rxjs';
 import { errorHandler } from '../../../courses/components/course-form/course-form.component';
 
 @Component({
@@ -33,11 +31,9 @@ import { errorHandler } from '../../../courses/components/course-form/course-for
     ReactiveFormsModule,
     AsyncPipe,
     HlmInputDirective,
-    HlmInputErrorDirective,
     HlmLabelDirective,
     HlmButtonDirective,
     HlmIconComponent,
-    MediaUploadComponent,
     BrnSelectImports,
     HlmSelectImports,
   ],
@@ -133,14 +129,14 @@ export class UnitFormComponent {
   protected readonly initialValues = signal(null);
   protected readonly courses$: Observable<Course[]> = this.adminService
     .getCourses()
-    .pipe(map((data: any) => data));
+    .pipe(map((res: any) => res.data));
 
   protected readonly pending = signal(false);
 
   constructor(
-    private formBuilder: FormBuilder,
-    private adminService: AdminService,
-    private router: Router
+    private readonly formBuilder: FormBuilder,
+    private readonly adminService: AdminService,
+    private readonly router: Router
   ) {}
 
   ngOnInit() {
@@ -158,8 +154,12 @@ export class UnitFormComponent {
       this.checkPristine();
     });
     this.form.get('order')?.valueChanges.subscribe((value) => {
-      const numberValue = parseInt(value);
-      this.form.get('order')?.setValue(numberValue || '');
+      const numberValue = parseInt(value, 10);
+      if (value !== numberValue) {
+        this.form
+          .get('order')
+          ?.setValue(numberValue || '', { emitEvent: false });
+      }
     });
   }
 
@@ -196,9 +196,7 @@ export class UnitFormComponent {
 
       toast.promise(firstValueFrom(updateUnit$), {
         loading: 'Updating unit...',
-        success: (data: any) => {
-          return data;
-        },
+        success: (_data: any) => "Unit updated successfully.",
         error: errorHandler('unit', 'updating'),
       });
     } else {
@@ -215,7 +213,7 @@ export class UnitFormComponent {
 
       toast.promise(firstValueFrom(createUnit$), {
         loading: 'Creating unit...',
-        success: (data: any) => data,
+        success: (_data: any) => "Unit created successfully.",
         error: errorHandler('unit', 'creating'),
       });
     }

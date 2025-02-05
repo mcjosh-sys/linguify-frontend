@@ -13,9 +13,7 @@ import { provideIcons } from '@ng-icons/core';
 import { lucideLoader2, lucideSave } from '@ng-icons/lucide';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
-import {
-  HlmInputDirective
-} from '@spartan-ng/ui-input-helm';
+import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
@@ -111,7 +109,7 @@ export class LessonFormComponent {
   protected readonly initialValues = signal(null);
   protected readonly units$: Observable<Unit[]> = this.adminService
     .getUnits()
-    .pipe(map((data: any) => data));
+    .pipe(map((res: any) => res.data));
 
   protected readonly pending = signal(false);
 
@@ -135,8 +133,12 @@ export class LessonFormComponent {
       this.checkPristine();
     });
     this.form.get('order')?.valueChanges.subscribe((value) => {
-      const numberValue = parseInt(value);
-      this.form.get('order')?.setValue(numberValue || '');
+      const numberValue = parseInt(value, 10);
+      if (value !== numberValue) {
+        this.form
+          .get('order')
+          ?.setValue(numberValue || '', { emitEvent: false });
+      }
     });
   }
 
@@ -172,9 +174,7 @@ export class LessonFormComponent {
 
       toast.promise(firstValueFrom(updateLesson$), {
         loading: 'Updating lesson...',
-        success: (data: any) => {
-          return data;
-        },
+        success: (_data: any) => "Lesson updated successfully.",
         error: errorHandler('lesson', 'updating'),
       });
     } else {
@@ -191,7 +191,7 @@ export class LessonFormComponent {
 
       toast.promise(firstValueFrom(createLesson$), {
         loading: 'Creating lesson...',
-        success: (data: any) => data,
+        success: (_data: any) => "Lesson created successfully.",
         error: errorHandler('lesson', 'updating'),
       });
     }

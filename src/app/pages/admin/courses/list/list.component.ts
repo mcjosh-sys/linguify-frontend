@@ -1,9 +1,10 @@
 import { LoaderComponent } from '@/app/components/loader/loader.component';
 import { Course } from '@/app/models/course.models';
 import { AdminService } from '@/app/services/admin.service';
+import { ConfirmModalService } from '@/app/services/confirm-modal.service';
 import { LoadingService } from '@/app/services/loading.service';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { AsyncPipe, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
 import {
   Component,
   computed,
@@ -31,10 +32,6 @@ import {
   HlmButtonDirective,
   HlmButtonModule,
 } from '@spartan-ng/ui-button-helm';
-import {
-  HlmCheckboxCheckIconComponent,
-  HlmCheckboxComponent,
-} from '@spartan-ng/ui-checkbox-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
@@ -53,7 +50,6 @@ import { CreateButtonComponent } from '../../components/create-button/create-but
 import { EmptyListComponent } from '../../components/empty-list/empty-list.component';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { errorHandler } from '../components/course-form/course-form.component';
-import { ConfirmModalService } from '@/app/services/confirm-modal.service';
 
 @Component({
   selector: 'app-list',
@@ -70,13 +66,9 @@ import { ConfirmModalService } from '@/app/services/confirm-modal.service';
     HlmButtonModule,
     HlmButtonDirective,
 
-    DecimalPipe,
     TitleCasePipe,
     HlmIconComponent,
     HlmInputDirective,
-
-    HlmCheckboxCheckIconComponent,
-    HlmCheckboxComponent,
 
     BrnSelectModule,
     HlmSelectModule,
@@ -142,7 +134,7 @@ export class ListComponent {
     const end = this._displayedIndices().end + 1;
     const courses = this._filteredCourses();
     if (!sort) {
-      return courses!.slice(start, end);
+      return courses.slice(start, end);
     }
     return [...courses]
       .sort(
@@ -165,11 +157,11 @@ export class ListComponent {
     this._displayedIndices.set({ start: startIndex, end: endIndex });
 
   constructor(
-    private adminService: AdminService,
-    private loadingService: LoadingService,
-    private clipboard: Clipboard,
-    private router: Router,
-    private cmService: ConfirmModalService
+    private readonly adminService: AdminService,
+    private readonly loadingService: LoadingService,
+    private readonly clipboard: Clipboard,
+    private readonly router: Router,
+    private readonly cmService: ConfirmModalService
   ) {
     this.fetchCourses$.pipe(switchMap(() => this.handleFetch())).subscribe();
     this.fetchCourses$.next();
@@ -182,8 +174,8 @@ export class ListComponent {
   handleFetch() {
     this.loadingService.start();
     return this.adminService.getCourses().pipe(
-      map((data: any) => {
-        this._courses.set(data);
+      map((res: any) => {
+        this._courses.set(res.data);
       }),
       catchError((err: any) => {
         console.error(err.message);
@@ -234,7 +226,7 @@ export class ListComponent {
     );
     toast.promise(firstValueFrom(delete$), {
       loading: 'Deleting course...',
-      success: (data: any) => data,
+      success: (_data: any) => "Course deleted successfully.",
       error: errorHandler('course', 'deleting'),
     });
   }

@@ -33,11 +33,11 @@ export class MediaBucketService {
       .getMedia()
       .pipe(takeUntilDestroyed())
       .subscribe({
-        next: (data: any) => {
-          const audio = (data as Media[]).filter(
+        next: (res: any) => {
+          const audio = (res.data as Media[]).filter(
             (item) => item.type === 'AUDIO'
           );
-          const images = (data as Media[]).filter(
+          const images = (res.data as Media[]).filter(
             (item) => item.type === 'IMAGE'
           );
           this._audio.set(audio);

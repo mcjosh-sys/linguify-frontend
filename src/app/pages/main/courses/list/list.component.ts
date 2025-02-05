@@ -1,16 +1,14 @@
 import { Course } from '@/app/models/user.models';
-import { ConfirmModalService } from '@/app/services/confirm-modal.service';
 import { UserProgressService } from '@/app/services/user-progress.service';
 import { Component, Input, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 import { toast } from 'ngx-sonner';
 import { CardComponent } from '../card/card.component';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CardComponent, HlmToasterComponent],
+  imports: [CardComponent],
   template: `
     <div
       class="pt-6 grid grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-4"
@@ -33,8 +31,8 @@ export class ListComponent {
   protected readonly loading = signal<boolean>(true);
 
   constructor(
-    private router: Router,
-    private userProgressService: UserProgressService,
+    private readonly router: Router,
+    private readonly userProgressService: UserProgressService,
   ) {}
 
   ngOnInit() {

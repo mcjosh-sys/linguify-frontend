@@ -12,7 +12,7 @@ import {
   ParamMap,
   Router,
 } from '@angular/router';
-import { finalize, forkJoin, Subscription, switchMap } from 'rxjs';
+import { finalize, forkJoin, map, Subscription, switchMap } from 'rxjs';
 import { QuizComponent } from './quiz/quiz.component';
 
 @Component({
@@ -34,9 +34,9 @@ export class LessonComponent {
   subscriptions = new Subscription();
 
   constructor(
-    private userProgressService: UserProgressService,
-    private router: Router,
-    private route: ActivatedRoute,
+    private readonly userProgressService: UserProgressService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -64,12 +64,15 @@ export class LessonComponent {
         switchMap((params: ParamMap) => {
           const id = params.get('id');
           return forkJoin({
-            lessonData: this.userProgressService.getLesson(
-              id ? parseInt(id) : undefined
-            ),
-            userProgressData: this.userProgressService.getUserProgress(),
-            userSubscriptionData:
-              this.userProgressService.getUserSubscription(),
+            lessonData: this.userProgressService
+              .getLesson(id ? parseInt(id) : undefined)
+              .pipe(map((res: any) => res.data)),
+            userProgressData: this.userProgressService
+              .getUserProgress()
+              .pipe(map((res: any) => res.data)),
+            userSubscriptionData: this.userProgressService
+              .getUserSubscription()
+              .pipe(map((res: any) => res.data)),
           }).pipe(
             finalize(() => {
               this.loading = false;

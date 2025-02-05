@@ -39,7 +39,6 @@ export const adminGuard: CanActivateFn = (_route, _state) => {
         if (isAdmin) {
           return true;
         }
-        console.log({isAdmin})
         routerState.setError(unauthorized);
         return false;
       })

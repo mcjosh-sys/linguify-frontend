@@ -18,7 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import { lucideLoader } from '@ng-icons/lucide';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
-import { finalize, forkJoin, Subscription } from 'rxjs';
+import { finalize, forkJoin, map, Subscription } from 'rxjs';
 import { FeedHeaderComponent } from './feed-header/feed-header.component';
 import { UnitComponent } from './unit/unit.component';
 import { Title } from '@angular/platform-browser';
@@ -28,13 +28,10 @@ import { Title } from '@angular/platform-browser';
   standalone: true,
   imports: [
     LoadingComponent,
-    SidebarComponent,
-    MobileHeaderComponent,
     StickyWrapperComponent,
     FeedWrapperComponent,
     FeedHeaderComponent,
     UserProgressComponent,
-    HlmIconComponent,
     UnitComponent,
     PromoComponent,
     QuestsComponent,
@@ -70,11 +67,21 @@ export class LearnComponent {
 
   fetchData() {
     const subscription = forkJoin({
-      userProgressData: this.userProgressService.getUserProgress(),
-      userSubscriptionData: this.userProgressService.getUserSubscription(),
-      unitsData: this.userProgressService.getUnits(),
-      courseProgressData: this.userProgressService.getCourseProgress(),
-      lessonPercentageData: this.userProgressService.getLessonPercentage(),
+      userProgressData: this.userProgressService
+        .getUserProgress()
+        .pipe(map((res: any) => res.data)),
+      userSubscriptionData: this.userProgressService
+        .getUserSubscription()
+        .pipe(map((res: any) => res.data)),
+      unitsData: this.userProgressService
+        .getUnits()
+        .pipe(map((res: any) => res.data)),
+      courseProgressData: this.userProgressService
+        .getCourseProgress()
+        .pipe(map((res: any) => res.data)),
+      lessonPercentageData: this.userProgressService
+        .getLessonPercentage()
+        .pipe(map((res: any) => res.data)),
     })
       .pipe(
         finalize(() => {

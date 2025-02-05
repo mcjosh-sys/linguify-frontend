@@ -138,7 +138,7 @@ export class TeamListComponent {
   }: PaginatorState) =>
     this.displayedIndices.set({ start: startIndex, end: endIndex });
 
-  constructor(private adminService: AdminService) {
+  constructor(private readonly adminService: AdminService) {
 
     effect(() => this.filter.set(this.debouncedFilter() ?? ''), {
       allowSignalWrites: true,

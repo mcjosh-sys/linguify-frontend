@@ -182,7 +182,7 @@ export class ChallengeOptionsListComponent {
   handleFetch() {
     this.loadingService.start();
     return this.adminService.getChallengeOptions().pipe(
-      map((data: any) => this._challengeOptions.set(data)),
+      map((res: any) => this._challengeOptions.set(res.data)),
       catchError((err: any) => {
         console.error(err);
         return of(err);
@@ -238,7 +238,7 @@ export class ChallengeOptionsListComponent {
       );
     toast.promise(firstValueFrom(delete$), {
       loading: 'Deleting challenge...',
-      success: (data: any) => data,
+      success: (_data: any) => "Challenge option deleted successfully",
       error: errorHandler('challenge option', 'deleting'),
     });
   }

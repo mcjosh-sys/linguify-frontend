@@ -60,12 +60,12 @@ export class CourseComponent {
 
   fetchCourse(id: string) {
     return this.adminService.getCourseById(id).pipe(
-      map((data: any) => {
-        const course = data as Course;
+      map((res: any) => {
+        const course: Course = res.data;
         this.course.set(course);
       }),
       catchError((err: any) => {
-        console.error(err.message);
+        console.error(err);
 
         this.routerState.setError(this.notFoundError, '/admin/error');
         return of(err);

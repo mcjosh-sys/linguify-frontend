@@ -42,6 +42,7 @@ export class TeamComponent {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: ({ isAdmin, teamData }) => {
+          console.log({isAdmin})
           if (isAdmin) {
             this.isAdmin.set(isAdmin);
             this.description.set('View and manage your team members');

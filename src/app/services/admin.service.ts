@@ -18,11 +18,11 @@ import { UserService } from './user.service';
 })
 export class AdminService {
   constructor(
-    private urlService: AdminUrlService,
-    private http: HttpClient,
-    private cacheService: CacheService,
-    private router: Router,
-    private userService: UserService
+    private readonly urlService: AdminUrlService,
+    private readonly http: HttpClient,
+    private readonly cacheService: CacheService,
+    private readonly router: Router,
+    private readonly userService: UserService
   ) {}
 
   private get cacheOptions() {
@@ -46,14 +46,14 @@ export class AdminService {
       },
     };
     this.router.navigate(['/signin'], navExtras);
-    return;
+    return null;
   }
 
   checkIfAdmin() {
     const userId = this.userId;
     return this.http.get(this.urlService.user.get.isAdmin(userId!), {
       ...this.cacheOptions,
-    }).pipe(map((data: any) => data.isAdmin as boolean));
+    }).pipe(map((res: any) => res.data.isAdmin as boolean));
   }
   checkIfStaff() {
     const userId = this.userId;
@@ -61,7 +61,7 @@ export class AdminService {
       .get(this.urlService.user.get.isStaff(userId!), {
         ...this.cacheOptions,
       })
-      .pipe(map((data: any) => data.isStaff as boolean));
+      .pipe(map((res: any) => res.data.isStaff as boolean));
   }
 
   checkPermission(courseId: any = '') {

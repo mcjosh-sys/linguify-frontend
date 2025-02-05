@@ -56,8 +56,8 @@ export class ChallengeOptionComponent {
         finalize(() => this.loading.set(false))
       )
       .subscribe({
-        next: (data: any) => {
-          this.challengeOption.set(data);
+        next: (res: any) => {
+          this.challengeOption.set(res.data);
         },
         error: (_err: any) => {
           this.routerState.setError(this.notFoundError, '/admin/error');

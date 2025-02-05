@@ -8,7 +8,7 @@ import { RouterError } from '../models';
   providedIn: 'root',
 })
 export class RouterStateService {
-  private readonly exceptRoutes = ['signin', 'signout', 'error', 'not-found'];
+  private readonly exceptRoutes = ['signin', 'signout', 'error', 'not-found',''];
   private readonly _state = signal<Record<string, any>>({});
   private readonly _error = signal<RouterError | null>(null);
   private readonly _afterAuthUrl = signal<string | null>(null);
@@ -23,7 +23,7 @@ export class RouterStateService {
         filter(
           (event): event is NavigationEnd => event instanceof NavigationEnd
         ),
-        // filter((event) => this.shouldCaptureAfterAuthUrl(event)),
+        filter((event) => this.shouldCaptureAfterAuthUrl(event)),
         filter((event) => event.urlAfterRedirects !== this.afterAuthUrl)
       )
       .subscribe((event) => {

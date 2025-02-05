@@ -1,5 +1,6 @@
 import { Course } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
+import { NgClass } from '@angular/common';
 import { Component, input, signal } from '@angular/core';
 import {
   FormBuilder,
@@ -13,14 +14,12 @@ import { lucideLoader2, lucideSave } from '@ng-icons/lucide';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import {
-  HlmInputDirective,
-  HlmInputErrorDirective,
+  HlmInputDirective
 } from '@spartan-ng/ui-input-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { toast } from 'ngx-sonner';
 import { finalize, firstValueFrom, map } from 'rxjs';
 import { MediaUploadComponent } from '../../../components/form-controls/media/media.component';
-import { NgClass } from '@angular/common';
 
 export const errorHandler = (title: string, action: 'creating' | 'updating' | 'deleting') => {
   return (error: any) => {
@@ -38,7 +37,6 @@ export const errorHandler = (title: string, action: 'creating' | 'updating' | 'd
     NgClass,
     ReactiveFormsModule,
     HlmInputDirective,
-    HlmInputErrorDirective,
     HlmLabelDirective,
     HlmButtonDirective,
     HlmIconComponent,
@@ -95,9 +93,9 @@ export class CourseFormComponent {
   protected readonly pending = signal(false)
 
   constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private adminService: AdminService
+    private readonly formBuilder: FormBuilder,
+    private readonly router: Router,
+    private readonly adminService: AdminService
   ) {}
 
   ngOnInit() {
@@ -144,9 +142,7 @@ export class CourseFormComponent {
 
       toast.promise(firstValueFrom(updateCourse), {
         loading: 'Updating course...',
-        success: (data: any) => {
-          return data
-        },
+        success: (_data: any) => "Course updated successfully.",
         error: errorHandler('course', 'updating'),
       });
     } else {
@@ -164,7 +160,7 @@ export class CourseFormComponent {
 
       toast.promise(firstValueFrom(createCourse), {
         loading: 'Creating course...',
-        success: (data: any) => data,
+        success: (_data: any) => "Course created successfully.",
         error: errorHandler('course', 'creating'),
       });
     }

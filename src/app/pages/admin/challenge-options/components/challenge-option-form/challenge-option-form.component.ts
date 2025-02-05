@@ -9,22 +9,21 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import { lucideLoader2, lucideSave } from '@ng-icons/lucide';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmCheckboxComponent } from '@spartan-ng/ui-checkbox-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import {
-  HlmInputDirective,
-  HlmInputErrorDirective,
+  HlmInputDirective
 } from '@spartan-ng/ui-input-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
+import { toast } from 'ngx-sonner';
 import { finalize, firstValueFrom, map, Observable } from 'rxjs';
 import { MediaUploadComponent } from '../../../components/form-controls/media/media.component';
-import { Router } from '@angular/router';
-import { toast } from 'ngx-sonner';
 import { errorHandler } from '../../../courses/components/course-form/course-form.component';
 
 @Component({
@@ -35,7 +34,6 @@ import { errorHandler } from '../../../courses/components/course-form/course-for
     ReactiveFormsModule,
     AsyncPipe,
     HlmInputDirective,
-    HlmInputErrorDirective,
     HlmLabelDirective,
     HlmButtonDirective,
     HlmIconComponent,
@@ -125,16 +123,16 @@ export class ChallengeOptionFormComponent {
   protected readonly initialValues = signal(null);
   protected readonly challenges$: Observable<Challenge[]> = this.adminService
     .getChallenges()
-    .pipe(map((data: any) => data));
+    .pipe(map((res: any) => res.data));
   protected readonly chanllenges = toSignal(this.challenges$);
   protected readonly pending = signal(false);
 
   protected readonly selectedChallenge = signal<Challenge | null>(null);
 
   constructor(
-    private formBuilder: FormBuilder,
-    private adminService: AdminService,
-    private router: Router
+    private readonly formBuilder: FormBuilder,
+    private readonly adminService: AdminService,
+    private readonly router: Router
   ) {}
 
   ngOnInit() {
@@ -200,9 +198,7 @@ export class ChallengeOptionFormComponent {
 
       toast.promise(firstValueFrom(updateChallengeOption$), {
         loading: 'Updating challenge option...',
-        success: (data: any) => {
-          return data;
-        },
+        success: (_data: any) => "Challenge option updated.",
         error: errorHandler('challenge option', 'updating'),
       });
     } else {
@@ -219,7 +215,7 @@ export class ChallengeOptionFormComponent {
 
       toast.promise(firstValueFrom(createChallengeOption$), {
         loading: 'Creating challenge option...',
-        success: (data: any) => data,
+        success: (_data: any) => "Challenge option created.",
         error: errorHandler('challenge option', 'creating'),
       });
     }

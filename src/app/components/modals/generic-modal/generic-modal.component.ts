@@ -16,12 +16,9 @@ import {
   HlmDialogComponent,
   HlmDialogContentComponent,
   HlmDialogDescriptionDirective,
-  HlmDialogFooterComponent,
   HlmDialogHeaderComponent,
   HlmDialogTitleDirective,
 } from '@spartan-ng/ui-dialog-helm';
-import { BrnSeparatorComponent } from '@spartan-ng/ui-separator-brain';
-import { HlmSeparatorDirective } from '@spartan-ng/ui-separator-helm';
 
 @Component({
   selector: 'app-generic-modal',
@@ -31,24 +28,23 @@ import { HlmSeparatorDirective } from '@spartan-ng/ui-separator-helm';
     HlmDialogComponent,
     HlmDialogContentComponent,
     HlmDialogDescriptionDirective,
-    HlmDialogFooterComponent,
     HlmDialogHeaderComponent,
     HlmDialogTitleDirective,
-    BrnSeparatorComponent,
-    HlmSeparatorDirective,
   ],
   template: `
     <hlm-dialog [state]="state()" (closed)="close()">
-      <hlm-dialog-content *brnDialogContent="let ctx" class="max-w-md">
-        <hlm-dialog-header>
-          <h3 hlmDialogTitle class="text-primary font-bold text-2xl">
+      <hlm-dialog-content
+        *brnDialogContent="let ctx"
+        class="!max-w-xl text-primary"
+      >
+        <hlm-dialog-header class="mb-4">
+          <h3 hlmDialogTitle class="text-xl font-bold">
             {{ title() }}
           </h3>
           <p hlmDialogDescription class="text-base">
             {{ description() }}
           </p>
         </hlm-dialog-header>
-        <brn-separator hlmSeparator class="my-2" />
         <ng-container #modalContent></ng-container>
       </hlm-dialog-content>
     </hlm-dialog>
@@ -66,7 +62,7 @@ export class GenericModalComponent {
 
   constructor(
     private genericModalService: GenericModalService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngAfterViewInit() {

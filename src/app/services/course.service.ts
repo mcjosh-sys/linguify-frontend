@@ -7,14 +7,14 @@ import {
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CACHING_ENABLED, PAGE_URL } from '@tokens/caching-enabled.token';
-import { catchError, throwError } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 import { UrlService } from './url.service';
+import { Course } from '../models/user.models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CourseService {
-
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -44,13 +44,21 @@ export class CourseService {
       .get(this.urlService.course.get.coursesUrl(), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Course[]),
+        catchError(this.handleError)
+      );
   }
 
   getCourseById(id: number) {
     return this.http
-      .get(this.urlService.course.get.courseByIdUrl(id), { ...this.cacheOptions })
-      .pipe(catchError(this.handleError));
+      .get(this.urlService.course.get.courseByIdUrl(id), {
+        ...this.cacheOptions,
+      })
+      .pipe(
+        map((res: any) => res.data as Course),
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: HttpErrorResponse) {

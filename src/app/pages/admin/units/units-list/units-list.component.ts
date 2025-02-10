@@ -195,8 +195,8 @@ export class UnitsListComponent {
   handleFetch() {
     this.loadingService.start();
     return this.adminService.getUnits().pipe(
-      map((res: any) => {
-        this._units.set(res.data);
+      map((data) => {
+        this._units.set(data);
       }),
       catchError((err: any) => {
         console.error(err);
@@ -232,7 +232,7 @@ export class UnitsListComponent {
     );
     toast.promise(firstValueFrom(delete$), {
       loading: 'Deleting unit...',
-      success: (data: any) => "Unit deleted successfully.",
+      success: (data: any) => 'Unit deleted successfully.',
       error: errorHandler('unit', 'deleting'),
     });
   }

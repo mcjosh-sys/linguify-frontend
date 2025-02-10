@@ -186,7 +186,7 @@ export class QuizComponent {
           }
         },
         error: (err: any) => {
-          console.error(err.message);
+          console.error(err);
           toast.error('Something went wrong. Please try again.');
         },
       });

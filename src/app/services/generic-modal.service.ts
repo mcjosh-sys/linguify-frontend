@@ -4,17 +4,17 @@ import { BehaviorSubject } from 'rxjs';
 
 interface GenericModalProps {
   component: Type<any>;
-  props: { [key: string]: any };
+  props?: { [key: string]: any };
   title: string;
   description: string;
 }
 
-interface GenericModalState{
-  title: string
-  description: string
-  state: BrnDialogState
-  props?: GenericModalProps['props']
-  component?: GenericModalProps['component']
+interface GenericModalState {
+  title: string;
+  description: string;
+  state: BrnDialogState;
+  props?: GenericModalProps['props'];
+  component?: GenericModalProps['component'];
 }
 @Injectable({
   providedIn: 'root',
@@ -26,22 +26,20 @@ export class GenericModalService {
     state: 'closed',
     props: {},
     component: undefined,
-  })
+  });
 
-  genericModalState$ = this.modalStateSubject.asObservable()
+  genericModalState$ = this.modalStateSubject.asObservable();
 
-  constructor(private injector: Injector) { }
+  constructor(private injector: Injector) {}
 
-  open({
-    component, props, title, description
-  }: GenericModalProps) {
+  open({ component, props, title, description }: GenericModalProps) {
     this.modalStateSubject.next({
       state: 'open',
       title,
       description,
       component,
-      props
-    })
+      props,
+    });
   }
 
   close() {
@@ -51,7 +49,6 @@ export class GenericModalService {
       state: 'closed',
       props: {},
       component: undefined,
-    })
+    });
   }
-
 }

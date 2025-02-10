@@ -57,8 +57,8 @@ export class ChallengeComponent {
         })
       )
       .subscribe({
-        next: (res: any) => {
-          this.challenge.set(res.data);
+        next: (data) => {
+          this.challenge.set(data);
         },
         error: (_err: any) => {
           this.routerState.setError(this.notFoundError, '/admin/error');

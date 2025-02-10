@@ -1,32 +1,32 @@
-@if(loading()){
-<app-loader />
-}@else{
-<app-admin-page-header
-  title="Team"
-  [description]="description()"
-  [showSeparator]="!isAdmin()"
-/>
-@if(isAdmin()){
-<hlm-tabs tab="team" class="w-full">
-  <hlm-tabs-list class="w-full grid grid-cols-2 mt-4" aria-label="teams">
-    <button hlmTabsTrigger="team">Team</button>
-    <button hlmTabsTrigger="invitations">Invitations</button>
-  </hlm-tabs-list>
+@if (loading()) {
+  <app-loader />
+} @else {
+  <app-admin-page-header
+    title="Team"
+    [description]="description()"
+    [showSeparator]="!isAdmin()"
+  />
+  @if (isAdmin()) {
+    <hlm-tabs tab="team" class="w-full">
+      <hlm-tabs-list class="mt-4 grid w-full grid-cols-2" aria-label="teams">
+        <button hlmTabsTrigger="team">Team</button>
+        <button hlmTabsTrigger="invitations">Invitations</button>
+      </hlm-tabs-list>
 
-  <div hlmTabsContent="team">
+      <div hlmTabsContent="team">
+        <app-admin-team-list [team]="team()" [isAdmin]="isAdmin()" />
+      </div>
+      <div hlmTabsContent="invitations">
+        <div class="flex w-full justify-end">
+          <app-admin-create-button
+            text="Invite member"
+            (onClick)="openInvitationMotal()"
+          />
+        </div>
+        Invitations
+      </div>
+    </hlm-tabs>
+  } @else {
     <app-admin-team-list [team]="team()" />
-  </div>
-  <div hlmTabsContent="invitations">
-    <div class="w-full flex justify-end">
-      <app-admin-create-button
-        text="Invite member"
-        (onClick)="openInvitationMotal()"
-      />
-    </div>
-    Invitations
-  </div>
-</hlm-tabs>
-}@else {
-  <app-admin-team-list [team]="team()" />
-} 
+  }
 }

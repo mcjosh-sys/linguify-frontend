@@ -13,10 +13,7 @@ import {
   signal,
   TrackByFunction,
 } from '@angular/core';
-import {
-  toObservable,
-  toSignal
-} from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
@@ -46,7 +43,16 @@ import {
 } from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';
 import { toast } from 'ngx-sonner';
-import { catchError, debounceTime, finalize, firstValueFrom, map, of, Subject, switchMap } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  finalize,
+  firstValueFrom,
+  map,
+  of,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { CreateButtonComponent } from '../../components/create-button/create-button.component';
 import { EmptyListComponent } from '../../components/empty-list/empty-list.component';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
@@ -182,7 +188,7 @@ export class ChallengeOptionsListComponent {
   handleFetch() {
     this.loadingService.start();
     return this.adminService.getChallengeOptions().pipe(
-      map((res: any) => this._challengeOptions.set(res.data)),
+      map((data) => this._challengeOptions.set(data)),
       catchError((err: any) => {
         console.error(err);
         return of(err);
@@ -238,7 +244,7 @@ export class ChallengeOptionsListComponent {
       );
     toast.promise(firstValueFrom(delete$), {
       loading: 'Deleting challenge...',
-      success: (_data: any) => "Challenge option deleted successfully",
+      success: (_data: any) => 'Challenge option deleted successfully',
       error: errorHandler('challenge option', 'deleting'),
     });
   }

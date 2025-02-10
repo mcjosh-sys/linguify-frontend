@@ -5,4 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-
+export function tw(strings: TemplateStringsArray, ...values: any[]): string {
+  return String.raw({ raw: strings }, ...values);
+}

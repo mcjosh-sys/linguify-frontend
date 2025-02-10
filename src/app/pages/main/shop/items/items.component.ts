@@ -64,13 +64,16 @@ export class ItemsComponent {
 
   onUpgrade() {
     this.pending = true;
-    const subscription = this.stripeService.createStripeUrl().subscribe({
-      next: (res: any) => (window.location.href = res.data),
-      error: (err: any) => {
-        toast.error('Something went wrong. Please try again.');
-        console.log(err.message);
-      },
-    });
+    const subscription = this.stripeService
+      .createStripeUrl()
+      .pipe(finalize(() => (this.pending = false)))
+      .subscribe({
+        next: (data) => (window.location.href = data),
+        error: (err: any) => {
+          toast.error('Something went wrong. Please try again.');
+          console.error(err.message);
+        },
+      });
 
     this.subscriptions.add(subscription);
   }

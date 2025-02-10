@@ -12,10 +12,7 @@ import {
   signal,
   TrackByFunction,
 } from '@angular/core';
-import {
-  toObservable,
-  toSignal
-} from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
@@ -45,7 +42,16 @@ import {
 } from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';
 import { toast } from 'ngx-sonner';
-import { catchError, debounceTime, finalize, firstValueFrom, map, of, Subject, switchMap } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  finalize,
+  firstValueFrom,
+  map,
+  of,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { CreateButtonComponent } from '../../components/create-button/create-button.component';
 import { EmptyListComponent } from '../../components/empty-list/empty-list.component';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
@@ -174,8 +180,8 @@ export class ListComponent {
   handleFetch() {
     this.loadingService.start();
     return this.adminService.getCourses().pipe(
-      map((res: any) => {
-        this._courses.set(res.data);
+      map((data) => {
+        this._courses.set(data);
       }),
       catchError((err: any) => {
         console.error(err.message);
@@ -226,7 +232,7 @@ export class ListComponent {
     );
     toast.promise(firstValueFrom(delete$), {
       loading: 'Deleting course...',
-      success: (_data: any) => "Course deleted successfully.",
+      success: (_data: any) => 'Course deleted successfully.',
       error: errorHandler('course', 'deleting'),
     });
   }

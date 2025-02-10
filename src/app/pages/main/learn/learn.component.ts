@@ -54,7 +54,7 @@ export class LearnComponent {
     private router: Router,
     private titleService: Title
   ) {
-    this.titleService.setTitle('Learn | Linguify')
+    this.titleService.setTitle('Learn | Linguify');
   }
 
   ngOnInit() {
@@ -67,21 +67,11 @@ export class LearnComponent {
 
   fetchData() {
     const subscription = forkJoin({
-      userProgressData: this.userProgressService
-        .getUserProgress()
-        .pipe(map((res: any) => res.data)),
-      userSubscriptionData: this.userProgressService
-        .getUserSubscription()
-        .pipe(map((res: any) => res.data)),
-      unitsData: this.userProgressService
-        .getUnits()
-        .pipe(map((res: any) => res.data)),
-      courseProgressData: this.userProgressService
-        .getCourseProgress()
-        .pipe(map((res: any) => res.data)),
-      lessonPercentageData: this.userProgressService
-        .getLessonPercentage()
-        .pipe(map((res: any) => res.data)),
+      userProgressData: this.userProgressService.getUserProgress(),
+      userSubscriptionData: this.userProgressService.getUserSubscription(),
+      unitsData: this.userProgressService.getUnits(),
+      courseProgressData: this.userProgressService.getCourseProgress(),
+      lessonPercentageData: this.userProgressService.getLessonPercentage(),
     })
       .pipe(
         finalize(() => {
@@ -98,11 +88,11 @@ export class LearnComponent {
           userProgressData,
           userSubscriptionData,
         }) => {
-          this.courseProgress = courseProgressData as CourseProgress;
-          this.units = unitsData as Unit[];
-          this.lessonPercentage = lessonPercentageData as number;
-          this.userProgress = userProgressData as UserProgress;
-          this.userSubscription = userSubscriptionData as UserSubscription;
+          this.courseProgress = courseProgressData;
+          this.units = unitsData;
+          this.lessonPercentage = lessonPercentageData;
+          this.userProgress = userProgressData;
+          this.userSubscription = userSubscriptionData;
         }
       );
     this.subscriptions.add(subscription);

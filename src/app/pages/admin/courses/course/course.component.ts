@@ -60,8 +60,8 @@ export class CourseComponent {
 
   fetchCourse(id: string) {
     return this.adminService.getCourseById(id).pipe(
-      map((res: any) => {
-        const course: Course = res.data;
+      map((data) => {
+        const course: Course = data;
         this.course.set(course);
       }),
       catchError((err: any) => {

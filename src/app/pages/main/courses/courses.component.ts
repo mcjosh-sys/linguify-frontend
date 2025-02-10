@@ -49,8 +49,8 @@ export class CoursesComponent {
 
   getUserProgress() {
     this.userProgressService.getUserProgress().subscribe({
-      next: (res: any) => {
-        this.userProgress = res.data;
+      next: (data) => {
+        this.userProgress = data;
       },
       error: (err: any) => console.log(err.message),
     });
@@ -58,9 +58,9 @@ export class CoursesComponent {
 
   getCourses() {
     this.courseService.getCourses().subscribe({
-      next: (res: any) => {
+      next: (data) => {
         this.loading = false;
-        this.courses = res.data;
+        this.courses = data;
       },
       error: (err: any) => console.log(err.message),
     });

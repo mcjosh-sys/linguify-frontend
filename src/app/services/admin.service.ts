@@ -7,7 +7,15 @@ import {
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { catchError, map, tap, throwError } from 'rxjs';
-import { Media, Staff } from '../models/admin.models';
+import {
+  Challenge,
+  ChallengeOption,
+  Course,
+  Lesson,
+  Media,
+  Staff,
+  Unit,
+} from '../models/admin.models';
 import { CACHING_ENABLED, PAGE_URL } from '../tokens/caching-enabled.token';
 import { AdminUrlService } from './admin-url.service';
 import { CacheService } from './cache.service';
@@ -51,9 +59,11 @@ export class AdminService {
 
   checkIfAdmin() {
     const userId = this.userId;
-    return this.http.get(this.urlService.user.get.isAdmin(userId!), {
-      ...this.cacheOptions,
-    }).pipe(map((res: any) => res.data.isAdmin as boolean));
+    return this.http
+      .get(this.urlService.user.get.isAdmin(userId!), {
+        ...this.cacheOptions,
+      })
+      .pipe(map((res: any) => res.data.isAdmin as boolean));
   }
   checkIfStaff() {
     const userId = this.userId;
@@ -76,7 +86,10 @@ export class AdminService {
       .get(this.urlService.course.get.allUrl(), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Course[]),
+        catchError(this.handleError)
+      );
   }
 
   getCourseById(id: string) {
@@ -84,7 +97,10 @@ export class AdminService {
       .get(this.urlService.course.get.byIdUrl(id), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Course),
+        catchError(this.handleError)
+      );
   }
 
   createCourse(payload: { title: string; imageSrc: string }) {
@@ -125,7 +141,10 @@ export class AdminService {
       .get(this.urlService.unit.get.allUrl(), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Unit[]),
+        catchError(this.handleError)
+      );
   }
 
   getUnitById(unitId: any) {
@@ -133,7 +152,10 @@ export class AdminService {
       .get(this.urlService.unit.get.byIdUrl(unitId), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Unit),
+        catchError(this.handleError)
+      );
   }
 
   createUnit(payload: {
@@ -187,7 +209,10 @@ export class AdminService {
       .get(this.urlService.lesson.get.allUrl(), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Lesson[]),
+        catchError(this.handleError)
+      );
   }
 
   getLessonById(lessonId: any) {
@@ -195,7 +220,10 @@ export class AdminService {
       .get(this.urlService.lesson.get.byIdUrl(lessonId), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Lesson),
+        catchError(this.handleError)
+      );
   }
 
   createLesson(payload: { title: string; unitId: number; order: number }) {
@@ -244,7 +272,10 @@ export class AdminService {
       .get(this.urlService.challenge.get.allUrl(), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Challenge[]),
+        catchError(this.handleError)
+      );
   }
 
   getChallengeById(challengeId: any) {
@@ -252,7 +283,10 @@ export class AdminService {
       .get(this.urlService.challenge.get.byIdUrl(challengeId), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Challenge),
+        catchError(this.handleError)
+      );
   }
 
   createChallenge(payload: {
@@ -311,7 +345,10 @@ export class AdminService {
       .get(this.urlService.challengeOption.get.allUrl(), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as ChallengeOption[]),
+        catchError(this.handleError)
+      );
   }
 
   getChallengeByOptionId(challengeOptionId: any) {
@@ -319,7 +356,10 @@ export class AdminService {
       .get(this.urlService.challengeOption.get.byIdUrl(challengeOptionId), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as ChallengeOption),
+        catchError(this.handleError)
+      );
   }
 
   createChallengeOption(payload: {
@@ -387,7 +427,10 @@ export class AdminService {
   getMedia() {
     return this.http
       .get(this.urlService.media.get.url(), { ...this.cacheOptions })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Media[]),
+        catchError(this.handleError)
+      );
   }
 
   postMedia(payload: Omit<Media, 'id'>) {
@@ -403,31 +446,38 @@ export class AdminService {
   }
 
   getInvitations(page: number = 1, limit: number = 10) {
-    return this.http.get(this.urlService.invitation.get(page, limit), {
-      ...this.cacheOptions
-    })
+    return this.http
+      .get(this.urlService.invitation.get(page, limit), {
+        ...this.cacheOptions,
+      })
+      .pipe(
+        map((res: any) => res.data as any[]),
+        catchError(this.handleError)
+      );
   }
   getTeam(page: number = 1, limit: number = 10) {
-    return this.http.get(this.urlService.team.get(page, limit), {
-      ...this.cacheOptions
-    }).pipe(map((data: any) => {
-      const team = (data as Staff[])
-      let index: number = -1;
-      const current = team.find((staff, i) => {
-        if(staff.userId === this.userId){
-          index = i
-        }
-        return staff.userId === this.userId
+    return this.http
+      .get(this.urlService.team.get(page, limit), {
+        ...this.cacheOptions,
       })
-      if (index > -1 && current) {
-        team.splice(index, 1)
-        team.unshift(current)
-      }
-      return team
-    }))
+      .pipe(
+        map((res: any) => {
+          const team = res.data as Staff[];
+          let index: number = -1;
+          const current = team.find((staff, i) => {
+            if (staff.userId === this.userId) {
+              index = i;
+            }
+            return staff.userId === this.userId;
+          });
+          if (index > -1 && current) {
+            team.splice(index, 1);
+            team.unshift(current);
+          }
+          return team;
+        })
+      );
   }
-
-
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0)

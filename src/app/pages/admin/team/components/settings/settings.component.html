@@ -1,0 +1,34 @@
+<div class="flex flex-col gap-4">
+  <img
+    [src]="staff.user.avatarUrl || '/images/user.png'"
+    alt="user image"
+    width="200"
+    height="200"
+    class="aspect-square h-28 w-28 rounded-md border-4 border-sky-500/50 bg-foreground object-cover"
+  />
+  <div class="grid grid-cols-2">
+    <label class="font-semibold text-muted-foreground"> Username: </label>
+    <p>
+      {{ staff.user.userName }}
+    </p>
+    <label class="font-semibold text-muted-foreground"> Full Name: </label>
+    <p>
+      {{ staff.user.firstName || "NILL" }} {{ staff.user.lastName || "NILL" }}
+    </p>
+    <label class="font-semibold text-muted-foreground"> Email: </label>
+    <p>
+      {{ staff.user.email }}
+    </p>
+    <label class="font-semibold text-muted-foreground"> Role: </label>
+    <p>
+      {{ staff.role }}
+    </p>
+    <label class="font-semibold text-muted-foreground"> Joined: </label>
+    <p>
+      {{ staff.createdAt | date: "medium" }}
+    </p>
+  </div>
+  @if (isAdmin && staff.role !== "ADMIN") {
+    <div></div>
+  }
+</div>

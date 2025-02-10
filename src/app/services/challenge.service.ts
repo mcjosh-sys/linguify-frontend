@@ -6,8 +6,20 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, forkJoin, of, switchMap, tap, throwError } from 'rxjs';
-import { UserProgress, UserSubscription } from '../models/user.models';
+import {
+  catchError,
+  forkJoin,
+  map,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
+import {
+  ChallengeProgress,
+  UserProgress,
+  UserSubscription,
+} from '../models/user.models';
 import { CACHING_ENABLED, PAGE_URL } from '../tokens/caching-enabled.token';
 import { CacheService } from './cache.service';
 import { UrlService } from './url.service';
@@ -43,7 +55,10 @@ export class ChallengeService {
       .get(this.urlService.challenge.get.progressUrl(challengeId), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as ChallengeProgress),
+        catchError(this.handleError)
+      );
   }
 
   upsertChallengeProgress(challengeId: number, lessonId: number) {
@@ -108,15 +123,15 @@ export class ChallengeService {
     return this.userProgressService
       .getUserProgress()
       .pipe(
+        map((res: any) => res.data as UserProgress),
         switchMap((userProgressData) => {
-          const currentUserProgress = userProgressData as UserProgress;
-          if (!currentUserProgress) {
+          if (!userProgressData) {
             throw new Error('User progress not found');
           }
           return this.getChallengeProgress(challengeId).pipe(
-            switchMap((data) => {
-              const isPractice = !!data;
-              if (currentUserProgress.hearts === 0 && !isPractice) {
+            switchMap((res: any) => {
+              const isPractice = !!res.data?.id;
+              if (userProgressData.hearts === 0 && !isPractice) {
                 return of({ error: 'hearts' });
               }
 
@@ -133,8 +148,8 @@ export class ChallengeService {
         })
       )
       .pipe(
-        tap((data: any) => {
-          if (!data.error)
+        tap((res: any) => {
+          if (!res.data?.error)
             this.cache.invalidateCache(this.urlService.user.get.progressUrl());
         })
       );

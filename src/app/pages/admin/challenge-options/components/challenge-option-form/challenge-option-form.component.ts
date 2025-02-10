@@ -123,7 +123,6 @@ export class ChallengeOptionFormComponent {
   protected readonly initialValues = signal(null);
   protected readonly challenges$: Observable<Challenge[]> = this.adminService
     .getChallenges()
-    .pipe(map((res: any) => res.data));
   protected readonly chanllenges = toSignal(this.challenges$);
   protected readonly pending = signal(false);
 

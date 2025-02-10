@@ -57,8 +57,8 @@ export class LessonComponent {
         })
       )
       .subscribe({
-        next: (res: any) => {
-          this.lesson.set(res.data);
+        next: (data) => {
+          this.lesson.set(data);
         },
         error: (_err: any) => {
           this.routerState.setError(this.notFoundError, '/admin/error');

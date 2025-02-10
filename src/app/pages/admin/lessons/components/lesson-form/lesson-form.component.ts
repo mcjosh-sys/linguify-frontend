@@ -109,7 +109,6 @@ export class LessonFormComponent {
   protected readonly initialValues = signal(null);
   protected readonly units$: Observable<Unit[]> = this.adminService
     .getUnits()
-    .pipe(map((res: any) => res.data));
 
   protected readonly pending = signal(false);
 

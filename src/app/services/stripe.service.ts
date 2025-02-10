@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { finalize } from 'rxjs';
+import { finalize, map } from 'rxjs';
 import { CacheService } from './cache.service';
 import { UrlService } from './url.service';
 import { UserService } from './user.service';
@@ -17,12 +17,19 @@ export class StripeService {
   ) {}
 
   createStripeUrl() {
-    this.userService.verifyAuth()
+    this.userService.verifyAuth();
 
-    return this.http.post(this.urlService.stripe.post.createStripeUrl(), {
-      email: this.userService.currentUser?.emailAddresses[0].emailAddress
-    }).pipe(finalize(() => {
-      this.cache.invalidateCache(this.urlService.user.get.subscriptionUrl())
-    }))
+    return this.http
+      .post(this.urlService.stripe.post.createStripeUrl(), {
+        email: this.userService.currentUser?.emailAddresses[0].emailAddress,
+      })
+      .pipe(
+        map((res: any) => res.data as string),
+        finalize(() => {
+          this.cache.invalidateCache(
+            this.urlService.user.get.subscriptionUrl()
+          );
+        })
+      );
   }
 }

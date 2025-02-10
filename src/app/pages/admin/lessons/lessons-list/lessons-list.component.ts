@@ -183,7 +183,7 @@ export class LessonsListComponent {
   handleFetch() {
     this.loadingService.start();
     return this.adminService.getLessons().pipe(
-      map((res: any) => this._lessons.set(res.data)),
+      map((data) => this._lessons.set(data)),
       catchError((err: any) => {
         console.error(err);
         return of(err);
@@ -228,7 +228,7 @@ export class LessonsListComponent {
     );
     toast.promise(firstValueFrom(delete$), {
       loading: 'Deleting lesson...',
-      success: (_data: any) => "Lesson deleted successfully.",
+      success: (_data: any) => 'Lesson deleted successfully.',
       error: errorHandler('lesson', 'deleting'),
     });
   }

@@ -187,7 +187,7 @@ export class ChallengesListComponent {
   handleFetch() {
     this.loadingService.start();
     return this.adminService.getChallenges().pipe(
-      map((res: any) => this._challenges.set(res.data)),
+      map((data) => this._challenges.set(data)),
       catchError((err: any) => {
         console.error(err);
         return of(err);
@@ -233,7 +233,7 @@ export class ChallengesListComponent {
     );
     toast.promise(firstValueFrom(delete$), {
       loading: 'Deleting challenge...',
-      success: (_data: any) => "Challenge deleted successfully.",
+      success: (_data: any) => 'Challenge deleted successfully.',
       error: errorHandler('challenge', 'deleting'),
     });
   }

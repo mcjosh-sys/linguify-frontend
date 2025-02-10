@@ -1,0 +1,8 @@
+{
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindStyleSheet": "./src/styles/tailwind.css",
+  "tailwindConfig": "./tailwind.config.js",
+  "tailwindAttributes": ["className"],
+  "tailwindFunctions": ["cn", "tw", "cva"],
+  "tailwindIncludeLanguages": ["html", "css", "ts"]
+}

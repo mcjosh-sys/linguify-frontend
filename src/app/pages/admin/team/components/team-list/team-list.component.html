@@ -1,36 +1,34 @@
-
-<div class="flex flex-col items-center justify-between gap-4 sm:flex-row mt-2">
+<div class="mt-2 flex flex-col items-center justify-between gap-4 sm:flex-row">
   <input
-  hlmInput
-  class="w-full md:w-80"
-  placeholder="Search name..."
-  [ngModel]="filter()"
-  (ngModelChange)="rawFilterInput.set($event)"
-/>
+    hlmInput
+    class="w-full md:w-80"
+    placeholder="Search name..."
+    [ngModel]="filter()"
+    (ngModelChange)="rawFilterInput.set($event)"
+  />
 
-<button hlmBtn variant="normalOutline" align="end" [brnMenuTriggerFor]="menu">
-  Columns
-  <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
-</button>
-<ng-template #menu>
-  <hlm-menu class="w-32">
-    @for (column of columnManager.allColumns; track column.name) {
-    <button
-      hlmMenuItemCheckbox
-      [disabled]="columnManager.isColumnDisabled(column.name)"
-      [checked]="columnManager.isColumnVisible(column.name)"
-      (triggered)="columnManager.toggleVisibility(column.name)"
-    >
-      <hlm-menu-item-check />
-      <span>{{ column.label }}</span>
-    </button>
-    }
-  </hlm-menu>
-</ng-template>
+  <!-- <button hlmBtn variant="normalOutline" align="end" [brnMenuTriggerFor]="menu">
+    Columns
+    <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+  </button>
+  <ng-template #menu>
+    <hlm-menu class="w-32">
+      @for (column of columnManager.allColumns; track column.name) {
+        <button
+          hlmMenuItemCheckbox
+          [disabled]="columnManager.isColumnDisabled(column.name)"
+          [checked]="columnManager.isColumnVisible(column.name)"
+          (triggered)="columnManager.toggleVisibility(column.name)"
+        >
+          <hlm-menu-item-check />
+          <span>{{ column.label }}</span>
+        </button>
+      }
+    </hlm-menu>
+  </ng-template> -->
 </div>
 
-
-<brn-table
+<!-- <brn-table
 hlm
 stickyHeader
 class="border-border mt-4 block h-fit  max-h-[400px] md:max-h-[500px] overflow-auto rounded-md border"
@@ -71,7 +69,7 @@ class="border-border mt-4 block h-fit  max-h-[400px] md:max-h-[500px] overflow-a
       >
         <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
       </button>
-  
+
       <ng-template #menu>
         <hlm-menu>
           <hlm-menu-label>Actions</hlm-menu-label>
@@ -103,57 +101,134 @@ class="border-border mt-4 block h-fit  max-h-[400px] md:max-h-[500px] overflow-a
 >
   No data
 </div>
-</brn-table>
-<div
-class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
-*brnPaginator="
-  let ctx;
-  totalElements: totalElements();
-  pageSize: pageSize();
-  onStateChange: onStateChange
-"
->
-<span class="text-sm text-muted-foreground"
-  >Showing {{ displayedIndices().start }} -
-  {{ displayedIndices().end + 1 }} of {{ totalElements() }} row(s).</span
->
-<div class="flex mt-2 sm:mt-0">
-  <brn-select
-    class="inline-block"
-    placeholder="{{ availablePageSizes[0] }}"
-    [(ngModel)]="pageSize"
-  >
-    <hlm-select-trigger class="inline-flex mr-1 w-15 h-9">
-      <hlm-select-value />
-    </hlm-select-trigger>
-    <hlm-select-content>
-      @for (size of availablePageSizes; track size) {
-      <hlm-option [value]="size">
-        {{ size === 10000 ? "All" : size }}
-      </hlm-option>
-      }
-    </hlm-select-content>
-  </brn-select>
+</brn-table> -->
+<div class="flex flex-col gap-3 py-4">
+  @for (staff of filteredSortedPaginatedTeam(); track staff.id) {
+    <div
+      class="flex w-full items-center gap-4 rounded-xl bg-muted p-2 px-4 text-muted-foreground hover:bg-muted/90"
+    >
+      <hlm-avatar class="ml-3 mr-6 h-12 w-12 border bg-foreground">
+        <img
+          [src]="staff.user.avatarUrl"
+          alt="Avatar"
+          hlmAvatarImage
+          class="object-cover"
+        />
+        <img src="/images/user.png" alt="user image" hlmAvatarFallback />
+      </hlm-avatar>
+      <div>
+        <p class="flex flex-1 items-center gap-2 font-bold" title="username">
+          {{ staff.user.userName }}
+          @if (currentUserId() === staff.userId) {
+            <span class="text-xs font-light italic">(you)</span>
+          }
+        </p>
+        <p>{{ staff.user.firstName || "" }} {{ staff.user.lastName || "" }}</p>
+      </div>
+      <p
+        class="text-sm"
+        title="role"
+        [class]="
+          hlm({
+            'font-semibold text-sky-500': staff.role === 'ADMIN',
+          })
+        "
+      >
+        {{ staff.role }}
+      </p>
+      <div class="ml-auto justify-self-end">
+        <button
+          hlmBtn
+          variant="normal"
+          class="h-6 w-6 p-0.5"
+          align="end"
+          [brnMenuTriggerFor]="menu"
+        >
+          <hlm-icon class="h-4 w-4" name="lucideMoreHorizontal" />
+        </button>
 
-  <div class="flex space-x-1">
-    <button
-      size="sm"
-      variant="normalOutline"
-      hlmBtn
-      [disabled]="!ctx.decrementable()"
-      (click)="ctx.decrement()"
-    >
-      Previous
-    </button>
-    <button
-      size="sm"
-      variant="normalOutline"
-      hlmBtn
-      [disabled]="!ctx.incrementable()"
-      (click)="ctx.increment()"
-    >
-      Next
-    </button>
-  </div>
+        <ng-template #menu>
+          <hlm-menu>
+            <hlm-menu-label>Actions</hlm-menu-label>
+            <hlm-menu-separator />
+            <hlm-menu-group>
+              @if (isAdmin() && staff.role !== "ADMIN") {
+                <button hlmMenuItem (click)="openSettingsModal(staff)">
+                  <hlm-icon hlmMenuIcon name="lucideCog" />
+                  Settings
+                </button>
+                <hlm-menu-separator />
+                <button
+                  hlmMenuItem
+                  class="bg-rose-500 text-white hover:bg-rose-500/90"
+                >
+                  <hlm-icon hlmMenuIcon name="lucideTrash2" />
+                  Delete
+                </button>
+              } @else {
+                <button hlmMenuItem (click)="openSettingsModal(staff)">
+                  <hlm-icon hlmMenuIcon name="lucideEye" />
+                  View
+                </button>
+              }
+            </hlm-menu-group>
+          </hlm-menu>
+        </ng-template>
+      </div>
+    </div>
+  }
 </div>
+<div
+  class="mt-4 flex flex-col justify-between sm:flex-row sm:items-center"
+  *brnPaginator="
+    let ctx;
+    totalElements: totalElements();
+    pageSize: pageSize();
+    onStateChange: onStateChange
+  "
+>
+  <span class="text-sm text-muted-foreground"
+    >Showing {{ displayedIndices().start }} -
+    {{ displayedIndices().end + 1 }} of {{ totalElements() }} row(s).</span
+  >
+  <div class="mt-2 flex sm:mt-0">
+    <brn-select
+      class="inline-block"
+      placeholder="{{ availablePageSizes[0] }}"
+      [(ngModel)]="pageSize"
+      [disabled]="!ctx.decrementable() && !ctx.incrementable()"
+    >
+      <hlm-select-trigger class="w-15 mr-1 inline-flex h-9">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        @for (size of availablePageSizes; track size) {
+          <hlm-option [value]="size">
+            {{ size === 10000 ? "All" : size }}
+          </hlm-option>
+        }
+      </hlm-select-content>
+    </brn-select>
+
+    <div class="flex space-x-1">
+      <button
+        size="sm"
+        variant="normalOutline"
+        hlmBtn
+        [disabled]="!ctx.decrementable()"
+        (click)="ctx.decrement()"
+      >
+        Previous
+      </button>
+      <button
+        size="sm"
+        variant="normalOutline"
+        hlmBtn
+        [disabled]="!ctx.incrementable()"
+        (click)="ctx.increment()"
+      >
+        Next
+      </button>
+    </div>
+  </div>
 </div>

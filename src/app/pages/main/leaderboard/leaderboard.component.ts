@@ -30,7 +30,6 @@ import { finalize, forkJoin, Subscription } from 'rxjs';
     HlmSeparatorDirective,
     BrnSeparatorComponent,
     HlmAvatarComponent,
-    HlmAvatarFallbackDirective,
     HlmAvatarImageDirective,
     PromoComponent,
     QuestsComponent,
@@ -47,11 +46,11 @@ export class LeaderboardComponent {
   hlm = hlm;
 
   constructor(
-    private userProgressService: UserProgressService,
-    private router: Router,
-    private titleService: Title
+    private readonly userProgressService: UserProgressService,
+    private readonly router: Router,
+    private readonly titleService: Title
   ) {
-    this.titleService.setTitle('Leaderboard | Linguify')
+    this.titleService.setTitle('Leaderboard | Linguify');
   }
 
   ngOnInit() {

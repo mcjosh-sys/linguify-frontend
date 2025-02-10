@@ -36,7 +36,7 @@ export class LessonComponent {
   constructor(
     private readonly userProgressService: UserProgressService,
     private readonly router: Router,
-    private readonly route: ActivatedRoute,
+    private readonly route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -64,15 +64,12 @@ export class LessonComponent {
         switchMap((params: ParamMap) => {
           const id = params.get('id');
           return forkJoin({
-            lessonData: this.userProgressService
-              .getLesson(id ? parseInt(id) : undefined)
-              .pipe(map((res: any) => res.data)),
-            userProgressData: this.userProgressService
-              .getUserProgress()
-              .pipe(map((res: any) => res.data)),
-            userSubscriptionData: this.userProgressService
-              .getUserSubscription()
-              .pipe(map((res: any) => res.data)),
+            lessonData: this.userProgressService.getLesson(
+              id ? parseInt(id) : undefined
+            ),
+            userProgressData: this.userProgressService.getUserProgress(),
+            userSubscriptionData:
+              this.userProgressService.getUserSubscription(),
           }).pipe(
             finalize(() => {
               this.loading = false;
@@ -94,9 +91,9 @@ export class LessonComponent {
         })
       )
       .subscribe(({ lessonData, userProgressData, userSubscriptionData }) => {
-        this.lesson = lessonData as Lesson;
-        this.userProgress = userProgressData as UserProgress;
-        this.userSubscription = userSubscriptionData as UserSubscription;
+        this.lesson = lessonData;
+        this.userProgress = userProgressData;
+        this.userSubscription = userSubscriptionData;
 
         this.initialPercentage.set(
           Math.round(

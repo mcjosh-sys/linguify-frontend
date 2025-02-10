@@ -1,4 +1,4 @@
-import { Challenge, Course } from '@/app/models/admin.models';
+import { Challenge, Course, Lesson } from '@/app/models/admin.models';
 import { AdminService } from '@/app/services/admin.service';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { Component, input, signal } from '@angular/core';
@@ -124,9 +124,8 @@ export class ChallengeFormComponent {
   protected form!: FormGroup;
   protected readonly pristine = signal<boolean>(true);
   protected readonly initialValues = signal(null);
-  protected readonly lessons$: Observable<Course[]> = this.adminService
+  protected readonly lessons$: Observable<Lesson[]> = this.adminService
     .getLessons()
-    .pipe(map((res: any) => res.data));
   protected readonly pending = signal(false);
 
   constructor(

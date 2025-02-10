@@ -6,9 +6,16 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, switchMap, tap, throwError } from 'rxjs';
+import { catchError, map, switchMap, tap, throwError } from 'rxjs';
 import { FULL_HEART, POINTS_TO_REFILL } from '../constants';
-import { UserProgress } from '../models/user.models';
+import {
+  CourseProgress,
+  Lesson,
+  Unit,
+  User,
+  UserProgress,
+  UserSubscription,
+} from '../models/user.models';
 import { CACHING_ENABLED, PAGE_URL } from '../tokens/caching-enabled.token';
 import { CacheService } from './cache.service';
 import { UrlService } from './url.service';
@@ -54,18 +61,27 @@ export class UserProgressService {
     this.verifyAuth();
     return this.http
       .get(this.urlService.user.get.progressUrl(), { ...this.cacheOptions })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as UserProgress),
+        catchError(this.handleError)
+      );
   }
   getUserSubscription() {
     this.verifyAuth();
     return this.http
       .get(this.urlService.user.get.subscriptionUrl(), { ...this.cacheOptions })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as UserSubscription),
+        catchError(this.handleError)
+      );
   }
 
   getTopTenUsers() {
     this.verifyAuth();
-    return this.http.get(this.urlService.user.get.topTenUsersUrl());
+    return this.http.get(this.urlService.user.get.topTenUsersUrl()).pipe(
+      map((res: any) => res.data as User[]),
+      catchError(this.handleError)
+    );
   }
 
   upsertUserProgress(courseId: number) {
@@ -106,7 +122,10 @@ export class UserProgressService {
       .get(this.urlService.user.get.unitsUrl(), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Unit[]),
+        catchError(this.handleError)
+      );
   }
 
   getCourseProgress() {
@@ -116,14 +135,20 @@ export class UserProgressService {
       .get(this.urlService.user.get.courseProgressUrl(), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as CourseProgress),
+        catchError(this.handleError)
+      );
   }
 
   getLesson(id?: number) {
     this.verifyAuth();
     return this.http
       .get(this.urlService.user.get.lessonUrl(id), { ...this.cacheOptions })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as Lesson),
+        catchError(this.handleError)
+      );
   }
 
   getLessonPercentage() {
@@ -133,7 +158,10 @@ export class UserProgressService {
       .get(this.urlService.user.get.lessonPercentageUrl(), {
         ...this.cacheOptions,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((res: any) => res.data as number),
+        catchError(this.handleError)
+      );
   }
 
   refillHeart() {

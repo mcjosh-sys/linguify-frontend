@@ -57,8 +57,8 @@ export class UnitComponent {
         })
       )
       .subscribe({
-        next: (res: any) => {
-          this.unit.set(res.data);
+        next: (data) => {
+          this.unit.set(data);
         },
         error: (_err: any) => {
           this.routerState.setError(this.notFoundError, '/admin/error');

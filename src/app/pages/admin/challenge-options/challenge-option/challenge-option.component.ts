@@ -31,7 +31,8 @@ export class ChallengeOptionComponent {
   private readonly notFoundError: RouterError = {
     message: {
       title: '404: Option Not Found',
-      description: "The challenge option you're trying to access does not exist.",
+      description:
+        "The challenge option you're trying to access does not exist.",
     },
     redirect: {
       label: 'challenge options page',
@@ -51,13 +52,15 @@ export class ChallengeOptionComponent {
           this.title.set('Edit Option');
           this.description.set('Edit challenge option');
           this.loading.set(true);
-          return this.adminService.getChallengeByOptionId(params.get('id')!).pipe(finalize(() => this.loading.set(false)));
+          return this.adminService
+            .getChallengeByOptionId(params.get('id')!)
+            .pipe(finalize(() => this.loading.set(false)));
         }),
         finalize(() => this.loading.set(false))
       )
       .subscribe({
-        next: (res: any) => {
-          this.challengeOption.set(res.data);
+        next: (data) => {
+          this.challengeOption.set(data);
         },
         error: (_err: any) => {
           this.routerState.setError(this.notFoundError, '/admin/error');

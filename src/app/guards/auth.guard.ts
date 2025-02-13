@@ -1,14 +1,16 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { catchError, forkJoin, map } from 'rxjs';
+import { catchError, forkJoin, map, of } from 'rxjs';
 import { AdminService } from '../services/admin.service';
+import { RouterStateService } from '../services/router-state.service';
 import { UserService } from '../services/user.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const userService = inject(UserService);
   const adminService = inject(AdminService);
   const router = inject(Router);
-  
+  const routerState = inject(RouterStateService);
+
   return forkJoin({
     isAuth: userService.isAuthenticated,
     isStaff: adminService.checkIfStaff(),
@@ -28,6 +30,19 @@ export const authGuard: CanActivateFn = (route, state) => {
       router.navigateByUrl('/signin');
       return false;
     }),
-    catchError(() => router.navigateByUrl('/signin'))
+    catchError(() => {
+      routerState.setError({
+        message: {
+          title: 'Server Error',
+          description:
+            'There is something wrong with the server. Please try again later.',
+        },
+        redirect: {
+          label: 'homepage',
+          url: '/',
+        },
+      });
+      return of(false);
+    }),
   );
 };

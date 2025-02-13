@@ -5,7 +5,7 @@ export const environment = {
   clerkPubKey: 'pk_test_a25vd24tZHJhZ29uLTQyLmNsZXJrLmFjY291bnRzLmRldiQ',
   clerkOrgId: 'org_2jSVppQA5Jf5gFcNOWQKl8hOsEe',
   appUrl: 'http://localhost:4200/',
-  apiUrl: 'http://127.0.0.1:4300/api',
+  apiUrl: 'https://linguify-backend.onrender.com/api',
   stripePubKey:
     'pk_test_51PdWtSAdhbkwbRcJr7K51JsPprGda8C6rJuDmFJ9kioGudc2Xi3GMbUd49ECHpQo5Pdw3sAha79qTm9mOLuM2kmg00DBTT7EEz',
   stripeSecret:

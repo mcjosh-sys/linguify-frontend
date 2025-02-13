@@ -31,7 +31,7 @@ export class UserProgressService {
 
     private router: Router,
     private urlService: UrlService,
-    private cache: CacheService
+    private cache: CacheService,
   ) {}
 
   private get standardOptions() {
@@ -63,7 +63,7 @@ export class UserProgressService {
       .get(this.urlService.user.get.progressUrl(), { ...this.cacheOptions })
       .pipe(
         map((res: any) => res.data as UserProgress),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
   getUserSubscription() {
@@ -72,7 +72,7 @@ export class UserProgressService {
       .get(this.urlService.user.get.subscriptionUrl(), { ...this.cacheOptions })
       .pipe(
         map((res: any) => res.data as UserSubscription),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
 
@@ -80,7 +80,7 @@ export class UserProgressService {
     this.verifyAuth();
     return this.http.get(this.urlService.user.get.topTenUsersUrl()).pipe(
       map((res: any) => res.data as User[]),
-      catchError(this.handleError)
+      catchError(this.handleError),
     );
   }
 
@@ -93,26 +93,26 @@ export class UserProgressService {
     return this.getUserProgress()
       .pipe(
         switchMap((data) => {
-          if (data) {
+          if (data?.userId) {
             return this.http.patch(
               this.urlService.user.patch.progressUrl(),
-              payload
+              payload,
             );
           }
           return this.http.post(
             this.urlService.user.post.progressUrl(),
-            payload
+            payload,
           );
-        })
+        }),
       )
       .pipe(
         tap(() => {
           this.cache.invalidateCache(this.urlService.user.get.progressUrl());
           this.cache.invalidateCache(this.urlService.user.get.unitsUrl());
           this.cache.invalidateCache(
-            this.urlService.user.get.courseProgressUrl()
+            this.urlService.user.get.courseProgressUrl(),
           );
-        })
+        }),
       );
   }
 
@@ -124,7 +124,7 @@ export class UserProgressService {
       })
       .pipe(
         map((res: any) => res.data as Unit[]),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
 
@@ -137,7 +137,7 @@ export class UserProgressService {
       })
       .pipe(
         map((res: any) => res.data as CourseProgress),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
 
@@ -147,7 +147,7 @@ export class UserProgressService {
       .get(this.urlService.user.get.lessonUrl(id), { ...this.cacheOptions })
       .pipe(
         map((res: any) => res.data as Lesson),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
 
@@ -160,7 +160,7 @@ export class UserProgressService {
       })
       .pipe(
         map((res: any) => res.data as number),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
 
@@ -185,14 +185,14 @@ export class UserProgressService {
 
           return this.http.patch(
             this.urlService.user.patch.refillHeartUrl(),
-            {}
+            {},
           );
-        })
+        }),
       )
       .pipe(
         tap(() => {
           this.cache.invalidateCache(this.urlService.user.get.progressUrl());
-        })
+        }),
       );
   }
 
@@ -200,7 +200,7 @@ export class UserProgressService {
     if (error.status === 0)
       console.error(
         `There is an issue with the client or network: `,
-        error.message
+        error.message,
       );
     else
       console.error('There is an issue with the server: ', error.error.message);
@@ -210,7 +210,7 @@ export class UserProgressService {
         return new Error('not found');
       }
       return new Error(
-        'Cannot retrieve user from the server. Please try again.'
+        'Cannot retrieve user from the server. Please try again.',
       );
     });
   }
